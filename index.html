@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zakhar's Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            overflow-y: auto;
+            background-color: #001f3f;
+            font-family: 'Orbitron', Arial, sans-serif;
+            position: relative;
+            background-image:
+                linear-gradient(to right, rgba(255, 255, 255, 0.2) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.2) 1px, transparent 1px);
+            background-size: 80px 80px;
+            background-attachment: local;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding: 0 80px;
+            height: 80px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo {
+            font-size: 60px;
+            font-weight: bold;
+            color: white;
+            margin: 0;
+            line-height: 1;
+        }
+
+        .highlight-dot {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background-color: #ff851b;
+            border-radius: 0;
+            vertical-align: middle;
+            margin: 0 2px;
+        }
+
+        .sort-button {
+            font-size: 60px;
+            font-weight: bold;
+            color: #ff851b;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-family: 'Orbitron', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1;
+            transition: color 0.3s;
+        }
+
+        .sort-button:hover {
+            color: #ffa64d;
+        }
+
+        .sort-button.sorted {
+            color: white;
+        }
+
+        .container {
+            position: relative;
+            width: 100%;
+            min-height: calc(100vh - 80px);
+            z-index: 1;
+        }
+
+        .item-link {
+            position: absolute;
+            transition: transform 0.5s linear;
+            z-index: 2;
+        }
+
+        .square {
+            width: 12px;
+            height: 12px;
+            background-color: #ff851b;
+            border: 1px solid transparent;
+            position: relative;
+        }
+
+        .item-text {
+            color: white;
+            font-size: 14px;
+            position: absolute;
+            white-space: nowrap;
+            text-align: left;
+            left: 20px;
+            top: -2px;
+            background: rgba(0, 31, 63, 0.85);
+            padding: 2px 6px;
+            border-radius: 2px;
+        }
+
+        .item-text.sorted {
+            background: transparent;
+            padding: 0;
+        }
+
+        .item-details {
+            color: white;
+            font-size: 12px;
+            position: absolute;
+            left: 20px;
+            top: 20px;
+            display: none;
+            white-space: normal;
+            text-align: left;
+            background: transparent;
+            padding: 0;
+        }
+
+        .show-details {
+            display: block;
+        }
+
+        a {
+            color: white;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: #ff851b;
+        }
+
+        .certificate-link,
+        .contact-link,
+        a.contact-link {
+            color: #ff851b !important;
+            text-decoration: underline !important;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .certificate-link:hover,
+        .contact-link:hover,
+        a.contact-link:hover {
+            color: #ffa64d !important;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .modal-content {
+            margin: 5% auto;
+            padding: 20px;
+            position: relative;
+            width: 80%;
+            max-width: 800px;
+            background-color: #001f3f;
+        }
+
+        .certificate-image {
+            width: 100%;
+            max-height: 80vh;
+        }
+
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            color: #ff851b;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close:hover {
+            color: #ffffff;
+        }
+
+        /* Responsive */
+        @media (max-width: 800px) {
+            body {
+                background-size: 60px 60px;
+            }
+            
+            .logo, .sort-button {
+                font-size: 32px;
+            }
+            .header {
+                padding: 0 40px;
+                height: 60px;
+            }
+            .item-text {
+                font-size: 11px;
+            }
+            .item-details {
+                font-size: 9px;
+            }
+            .highlight-dot {
+                font-size: 12px;
+                width: 12px;
+                height: 12px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            body {
+                background-size: 60px 60px;
+            }
+            
+            .logo, .sort-button {
+                font-size: 24px;
+            }
+            .header {
+                padding: 0 40px;
+                height: 40px;
+            }
+            .square {
+                width: 8px;
+                height: 8px;
+            }
+            .item-text {
+                font-size: 10px;
+            }
+            .item-details {
+                font-size: 8px;
+            }
+            .highlight-dot {
+                font-size: 8px;
+                width: 8px;
+                height: 8px;
+            }
+        }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">ZAKHARGALAN<span class="highlight-dot"></span>IN</div>
+        <button class="sort-button">SORT</button>
+    </div>
+    <div class="container"></div>
+
+    <div id="certificateModal" class="modal">
+        <div class="modal-content">
+            <span class="close">×</span>
+            <img id="certificateImage" src="" alt="Certificate" class="certificate-image">
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            const container = $('.container');
+            let gridSize = 80;
+            let squareSize = 12;
+            const projectSquares = [];
+            const myProjectSquares = [];
+            const skillSquares = [];
+            const contactSquares = [];
+            let occupiedPositions = new Set();
+            let sortMode = false;
+
+            // Adjust grid size based on screen width
+            function getGridSize() {
+                const width = $(window).width();
+                if (width <= 600) return 60;
+                if (width <= 800) return 60;
+                return 80;
+            }
+
+            function getSquareSize() {
+                return $(window).width() <= 600 ? 8 : 12;
+            }
+
+            // Set body height to fit complete grid cells
+            function setBodyHeight() {
+                const currentGridSize = getGridSize();
+                const viewportHeight = $(window).height();
+                const fullCells = Math.floor(viewportHeight / currentGridSize);
+                const bodyHeight = fullCells * currentGridSize;
+                
+                // Set both min-height and actual height for unsorted state
+                $('body').css({
+                    'min-height': bodyHeight + 'px',
+                    'height': sortMode ? 'auto' : bodyHeight + 'px',
+                    'background-size': currentGridSize + 'px ' + currentGridSize + 'px'
+                });
+            }
+
+            setBodyHeight();
+
+            const projects = [
+                { name: 'K&G Gekon', year: '2025 - Present', details: 'Senior Estimator. GC projects up to $55M — reviewing drawings/specifications and providing cost estimates across all design stages.' },
+                { name: 'Freelance Estimator', year: '2019 - 2025', details: 'Estimator. Reviewed drawings/specifications and provided cost estimates for projects up to $2M across all design stages, preparing detailed material submittal packages.' },
+                { name: 'Stroy Standard', year: '2019', details: 'Oversaw final finishing work for developer-delivered apartments; managed materials, documentation, and client coordination; prepared proposals and visualizations.' },
+                { name: 'RestStroyGroup', year: '2019', details: 'Engineer for monastic complex restoration; produced monthly execution docs, inspected subcontractor documentation, maintained journals/reports and oversaw on-site logistics.' },
+                { name: 'Ivalon', year: '2019', details: 'Site Supervisor for reconstruction of a monastic complex, managing demolition, structural work, finishes, timekeeping, reporting and materials for a 50-person team.' },
+                { name: 'Concept-life', year: '2018', details: 'Architect-Designer: created sketches and drawings, produced visualizations and cost estimates, and coordinated procurement and approvals to meet client expectations.' },
+                { name: 'StroyMontazhKomplekt', year: '2018', details: 'Engineer: Developed execution documentation for technical pipelines and metal structures on a high-security site for an international contractor under rotational schedule.' },
+                { name: 'Comfort Zone', year: '2018', details: 'Estimator: Calculated volumes for apartment renovations and delivered detailed, competitive estimates.' },
+                { name: 'TransAutomatics', year: '2018', details: 'Engineer: Compiled execution docs, designed/visualized projects, verified construction volumes, and prepared supply schedules and commercial proposals.' },
+                { name: 'Legion', year: '2017', details: 'Site Manager: Oversaw quality control, inspections, execution documentation, supply chain and record keeping.' },
+                { name: 'ArtStroyProject', year: '2016', details: 'Architect: Created architectural and structural plans and provided visualizations for project development.' },
+                { name: 'BaltHydroProject', year: '2015', details: 'Design Engineer: Assisted in preparing working documentation for various architectural and infrastructure projects.' },
+                { name: 'Izhevsk Department of Architecture', year: '2014', details: 'Assistant: Provided multi-functional support and gained broad experience in project development and execution.' }
+            ];
+
+            const skills = [
+                { label: 'CAD', details: 'AutoCAD, SketchUp', detailsHtml: 'AutoCAD, SketchUp' },
+                { label: 'BIM', details: 'Revit, Tekla, Sapphire, Robot', detailsHtml: 'Revit, Tekla, Sapphire, Robot' },
+                { label: 'Structural Analysis', details: 'ETABS, SCAD, Lira', detailsHtml: '<span class="certificate-link" data-img="Structuristik1.jpg">ETABS</span>, SCAD, Lira' },
+                { label: 'PM and Takeoff', details: 'Navisworks, On-screen Takeoff, MS Project', detailsHtml: '<span class="certificate-link" data-img="NAVISWORKS.jpg">Navisworks</span>, On-screen Takeoff, MS Project' },
+                { label: 'Programming', details: 'C#, Python, Dynamo, VBA', detailsHtml: '<span class="certificate-link" data-img="ITMO.jpg">C#</span>, Python, Dynamo, VBA' },
+                { label: 'Other', details: 'Wolfram Mathematica', detailsHtml: 'Wolfram Mathematica' },
+                { label: 'Language', details: 'Russian, English', detailsHtml: 'Russian, English' }
+            ];
+
+            const contacts = [
+                { label: 'Phone', details: '+1 929 784-9752', detailsHtml: '<a href="tel:+19297849752" class="contact-link">+1 929 784-9752</a>' },
+                { label: 'Email', details: 'zakhargalanin@gmail.com', detailsHtml: '<a href="mailto:zakhargalanin@gmail.com" class="contact-link">zakhargalanin@gmail.com</a>' },
+                { label: 'Location', details: 'New York', detailsHtml: 'New York' },
+                { label: 'GitHub', details: 'www.github.com/galaninz', detailsHtml: '<a href="https://www.github.com/galaninz" class="contact-link" target="_blank">www.github.com/galaninz</a>' }
+            ];
+
+            const myProjects = [
+                { label: 'SKÅDIS Generator', details: 'Interactive 3D tool for designing custom IKEA SKÅDIS pegboard accessories. Built with Three.js — supports containers, hooks, and hangers with real-time preview and STL export for 3D printing.', detailsHtml: '<a href="skadisgenerator.html" class="contact-link" target="_blank">Interactive 3D tool</a> for designing custom IKEA SKÅDIS pegboard accessories. Built with Three.js — supports containers, hooks, and hangers with real-time preview and STL export for 3D printing.' }
+            ];
+
+            function addRandomSquare(item, index, type) {
+                gridSize = getGridSize();
+                squareSize = getSquareSize();
+                
+                const containerWidth = $(window).width();
+                const containerHeight = $(window).height();
+                const headerHeight = $(window).width() <= 600 ? 40 : $(window).width() <= 800 ? 60 : 80;
+                const gridOffset = $(window).width() <= 800 ? 20 : 0;
+                const reservedRows = Math.ceil(headerHeight / gridSize) + 1;
+                const firstGridY = reservedRows * gridSize + gridOffset;
+                
+                const cols = Math.floor(containerWidth / gridSize);
+                const maxRows = Math.floor((containerHeight - firstGridY) / gridSize);
+                const maxAttempts = cols * maxRows;
+                
+                let randomX, randomY, attempts = 0;
+                do {
+                    randomX = Math.floor(Math.random() * cols) * gridSize;
+                    const randomRow = Math.floor(Math.random() * maxRows);
+                    randomY = firstGridY + randomRow * gridSize;
+                    attempts++;
+                } while (occupiedPositions.has(`${randomX}_${randomY}`) && attempts < maxAttempts);
+                
+                occupiedPositions.add(`${randomX}_${randomY}`);
+
+                const squareContainer = $('<div></div>').addClass('item-link').css({
+                    transform: `translate(${randomX - squareSize / 2 + 0.5}px, ${randomY - squareSize / 2 + 0.5}px)`
+                });
+
+                const square = $('<div></div>').addClass('square');
+                
+                let floatingText, detailsText, detailsHtml;
+                if (type === 'project') {
+                    floatingText = `${item.name} (${item.year})`;
+                    detailsText = item.details;
+                    detailsHtml = item.details;
+                } else {
+                    floatingText = item.label;
+                    detailsText = item.details;
+                    detailsHtml = item.detailsHtml;
+                }
+
+                const itemText = $('<div></div>').addClass('item-text').text(floatingText);
+                const itemDetails = $('<div></div>').addClass('item-details')
+                    .data('plain', detailsText)
+                    .data('fullHtml', detailsHtml)
+                    .text(detailsText);
+
+                squareContainer.append(square, itemText, itemDetails).appendTo(container);
+
+                if (type === 'project') projectSquares.push(squareContainer);
+                else if (type === 'myproject') myProjectSquares.push(squareContainer);
+                else if (type === 'skill') skillSquares.push(squareContainer);
+                else if (type === 'contact') contactSquares.push(squareContainer);
+
+                squareContainer.data('currentX', randomX).data('currentY', randomY);
+                moveSquare(squareContainer, randomX, randomY);
+            }
+
+            function moveSquare(square, currentX, currentY) {
+                if (sortMode) {
+                    clearTimeout(square.data('moveTimeout'));
+                    clearTimeout(square.data('delayTimeout'));
+                    return;
+                }
+
+                gridSize = getGridSize();
+                const directions = [
+                    { x: 0, y: -1 }, { x: 1, y: 0 }, { x: 0, y: 1 }, { x: -1, y: 0 }
+                ];
+                
+                // Calculate boundaries based on full grid cells only
+                const containerWidth = $(window).width();
+                const containerHeight = $(window).height();
+                const headerHeight = $(window).width() <= 600 ? 40 : $(window).width() <= 800 ? 60 : 80;
+                const gridOffset = $(window).width() <= 800 ? 20 : 0;
+                
+                const maxCols = Math.floor(containerWidth / gridSize);
+                const maxX = (maxCols - 1) * gridSize;
+                
+                const firstGridY = (Math.ceil(headerHeight / gridSize) + 1) * gridSize + gridOffset;
+                const availableHeight = containerHeight - firstGridY;
+                const maxRows = Math.floor(availableHeight / gridSize);
+                const maxY = firstGridY + (maxRows - 1) * gridSize;
+                
+                // Always move at least 2-3 steps to avoid stopping at same intersection
+                const step = Math.floor(Math.random() * 3) + 2;
+                const distance = step * gridSize;
+                const duration = distance * 2.5;
+
+                const direction = directions[Math.floor(Math.random() * directions.length)];
+                let newX = currentX + direction.x * distance;
+                let newY = currentY + direction.y * distance;
+
+                // Clamp to boundaries (only full grid cells)
+                newX = Math.max(0, Math.min(newX, maxX));
+                newY = Math.max(firstGridY, Math.min(newY, maxY));
+
+                square.css({
+                    transition: `transform ${duration}ms linear`,
+                    transform: `translate(${newX - squareSize / 2 + 0.5}px, ${newY - squareSize / 2 + 0.5}px)`
+                }).data('currentX', newX).data('currentY', newY);
+
+                const moveTimeout = setTimeout(() => {
+                    if (!sortMode) {
+                        const delayTimeout = setTimeout(() => moveSquare(square, newX, newY), 800);
+                        square.data('delayTimeout', delayTimeout);
+                    }
+                }, duration);
+                square.data('moveTimeout', moveTimeout);
+            }
+
+            function moveToTargetAlongGrid(square, currentX, currentY, targetX, targetY, callback) {
+                if (currentX === targetX && currentY === targetY) {
+                    if (callback) callback();
+                    return;
+                }
+
+                gridSize = getGridSize();
+                let nextX = currentX;
+                let nextY = currentY;
+
+                // Move along grid: first complete X movement, then Y movement
+                if (currentX !== targetX) {
+                    nextX = currentX + Math.sign(targetX - currentX) * gridSize;
+                } else if (currentY !== targetY) {
+                    nextY = currentY + Math.sign(targetY - currentY) * gridSize;
+                }
+
+                const duration = gridSize * 2.5;
+
+                square.css({
+                    transition: `transform ${duration}ms linear`,
+                    transform: `translate(${nextX - squareSize / 2 + 0.5}px, ${nextY - squareSize / 2 + 0.5}px)`
+                }).data('currentX', nextX).data('currentY', nextY);
+
+                setTimeout(() => {
+                    moveToTargetAlongGrid(square, nextX, nextY, targetX, targetY, callback);
+                }, duration);
+            }
+
+            function typeWriterEffect(element, text, fullHtml) {
+                let index = 0;
+                element.text('');
+                function type() {
+                    if (index < text.length) {
+                        element.append(text.charAt(index));
+                        index++;
+                        setTimeout(type, 30);
+                    } else if (fullHtml) {
+                        element.html(fullHtml);
+                    }
+                }
+                type();
+            }
+
+            function sortProjects() {
+                sortMode = true;
+                gridSize = getGridSize();
+                squareSize = getSquareSize();
+                
+                [...projectSquares, ...myProjectSquares, ...skillSquares, ...contactSquares].forEach(square => {
+                    clearTimeout(square.data('moveTimeout'));
+                    clearTimeout(square.data('delayTimeout'));
+                    square.stop(true, false);
+                });
+
+                const containerWidth = $(window).width();
+                const units = Math.floor(containerWidth / gridSize);
+                let columns = containerWidth >= 1200 ? 4 : containerWidth >= 800 ? 2 : 1;
+
+                let xPositions = [], colWidths = [];
+                if (columns === 4) {
+                    const available = units - 1;
+                    const col1 = Math.round(available * 0.33);
+                    const col2 = Math.round(available * 0.33);
+                    const col3 = Math.round(available * 0.16);
+                    const col4 = Math.max(available - col1 - col2 - col3, 1);
+                    xPositions = [
+                        gridSize,
+                        gridSize + col1 * gridSize,
+                        gridSize + (col1 + col2) * gridSize,
+                        gridSize + (col1 + col2 + col3) * gridSize
+                    ];
+                    colWidths = [
+                        col1 * gridSize - gridSize / 2,
+                        col2 * gridSize - gridSize / 2,
+                        col3 * gridSize - gridSize / 2,
+                        col4 * gridSize - gridSize / 2
+                    ];
+                } else if (columns === 2) {
+                    const secondUnits = Math.min(5, Math.max(units - 2, 1));
+                    const firstUnits = Math.max(units - 1 - secondUnits, 1);
+                    xPositions = [gridSize, gridSize + firstUnits * gridSize];
+                    colWidths = [firstUnits * gridSize - gridSize / 2, secondUnits * gridSize - gridSize / 2];
+                } else {
+                    const singleUnits = Math.max(units - 1, 1);
+                    xPositions = [gridSize];
+                    colWidths = [singleUnits * gridSize - gridSize / 2];
+                }
+
+                const columnItems = columns === 1 ? [[...projectSquares, ...myProjectSquares, ...contactSquares, ...skillSquares]] :
+                                    columns === 2 ? [[...projectSquares, ...myProjectSquares], [...contactSquares, ...skillSquares]] :
+                                    [[...projectSquares], [...myProjectSquares], [...skillSquares], [...contactSquares]];
+
+                const maxRows = Math.max(...columnItems.map(list => list.length));
+                const headerHeight = $(window).width() <= 600 ? 40 : $(window).width() <= 800 ? 60 : 80;
+                const gridOffset = $(window).width() <= 800 ? 20 : 0;
+                const firstRowY = Math.ceil(headerHeight / gridSize) * gridSize + gridOffset;
+                const totalHeight = firstRowY + (maxRows + 2) * gridSize;
+                container.css('height', totalHeight + 'px');
+                
+                // Ensure body covers all content with complete grid cells
+                const fullCells = Math.ceil(totalHeight / gridSize);
+                const bodyHeight = fullCells * gridSize;
+                $('body').css({
+                    'min-height': bodyHeight + 'px',
+                    'height': 'auto'
+                });
+
+                columnItems.forEach((list, colIndex) => {
+                    list.forEach((square, rowIndex) => {
+                        const targetX = xPositions[colIndex];
+                        const targetY = firstRowY + rowIndex * gridSize;
+                        const currentX = square.data('currentX');
+                        const currentY = square.data('currentY');
+
+                        square.find('.item-details, .item-text').css({
+                            'max-width': colWidths[colIndex] + 'px',
+                            'width': colWidths[colIndex] + 'px',
+                            'white-space': 'normal',
+                            'word-wrap': 'break-word',
+                            'overflow-wrap': 'break-word'
+                        });
+
+                        square.find('.item-text').addClass('sorted');
+
+                        moveToTargetAlongGrid(square, currentX, currentY, targetX, targetY, () => {
+                            const details = square.find('.item-details');
+                            if (!details.hasClass('show-details')) {
+                                details.addClass('show-details');
+                                typeWriterEffect(details, details.data('plain'), details.data('fullHtml'));
+                            }
+                        });
+                    });
+                });
+
+                $('.item-text').css('white-space', 'normal');
+            }
+
+            function unsortProjects() {
+                sortMode = false;
+                gridSize = getGridSize();
+                squareSize = getSquareSize();
+                occupiedPositions.clear();
+                container.css('height', '');
+                
+                // Reset body height to viewport grid cells when unsorted
+                setBodyHeight();
+
+                [...projectSquares, ...myProjectSquares, ...skillSquares, ...contactSquares].forEach(square => {
+                    clearTimeout(square.data('moveTimeout'));
+                    clearTimeout(square.data('delayTimeout'));
+                    square.stop(true, false);
+
+                    const containerWidth = Math.floor($(window).width() / gridSize) * gridSize;
+                    const containerHeight = Math.floor($(window).height() / gridSize) * gridSize;
+                    const cols = Math.floor(containerWidth / gridSize);
+                    const headerHeight = $(window).width() <= 600 ? 40 : $(window).width() <= 800 ? 60 : 80;
+                    const gridOffset = $(window).width() <= 800 ? 20 : 0;
+                    const firstGridY = (Math.ceil(headerHeight / gridSize) + 1) * gridSize + gridOffset;
+                    const maxRows = Math.floor((containerHeight - firstGridY) / gridSize);
+                    
+                    let rx, ry, tries = 0;
+                    do {
+                        rx = Math.floor(Math.random() * cols) * gridSize;
+                        ry = firstGridY + Math.floor(Math.random() * maxRows) * gridSize;
+                        tries++;
+                    } while (occupiedPositions.has(`${rx}_${ry}`) && tries < cols * maxRows);
+                    
+                    occupiedPositions.add(`${rx}_${ry}`);
+
+                    square.find('.item-details').removeClass('show-details').text(square.find('.item-details').data('plain'));
+                    square.find('.item-text').removeClass('sorted');
+
+                    square.fadeOut(500, function() {
+                        square.css({ transform: `translate(${rx - squareSize / 2 + 0.5}px, ${ry - squareSize / 2 + 0.5}px)` });
+                        square.data('currentX', rx).data('currentY', ry);
+                        square.fadeIn(500, function() {
+                            moveSquare(square, rx, ry);
+                        });
+                    });
+                });
+
+                $('.item-text, .item-details').css({ 
+                    'white-space': 'nowrap', 
+                    'width': '', 
+                    'max-width': '',
+                    'word-wrap': '',
+                    'overflow-wrap': ''
+                });
+            }
+
+            projects.forEach((p, i) => addRandomSquare(p, i, 'project'));
+            myProjects.forEach((p, i) => addRandomSquare(p, i, 'myproject'));
+            skills.forEach((s, i) => addRandomSquare(s, i, 'skill'));
+            contacts.forEach((c, i) => addRandomSquare(c, i, 'contact'));
+
+            $('.sort-button').on('click', function() {
+                if (sortMode) {
+                    unsortProjects();
+                    $(this).removeClass('sorted').text('SORT');
+                } else {
+                    sortProjects();
+                    $(this).addClass('sorted').text('UNSORT');
+                }
+            });
+
+            const modal = $('#certificateModal');
+            $(document).on('click', '.certificate-link', function() {
+                $('#certificateImage').attr('src', $(this).data('img'));
+                modal.show();
+            });
+
+            $(window).on('click', function(e) {
+                if ($(e.target).is(modal) || $(e.target).is('.close')) {
+                    modal.hide();
+                }
+            });
+
+            $(window).resize(function() {
+                setBodyHeight();
+                occupiedPositions.clear();
+                [...projectSquares, ...myProjectSquares, ...skillSquares, ...contactSquares].forEach(s => s.remove());
+                projectSquares.length = myProjectSquares.length = skillSquares.length = contactSquares.length = 0;
+                projects.forEach((p, i) => addRandomSquare(p, i, 'project'));
+                myProjects.forEach((p, i) => addRandomSquare(p, i, 'myproject'));
+                skills.forEach((s, i) => addRandomSquare(s, i, 'skill'));
+                contacts.forEach((c, i) => addRandomSquare(c, i, 'contact'));
+            });
+        });
+    </script>
+</body>
+</html>
