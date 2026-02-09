@@ -64,6 +64,16 @@
             height: var(--grid-size);
         }
         
+        .back-arrow {
+            color: var(--accent-primary);
+            text-decoration: none;
+            margin-right: 8px;
+        }
+        
+        .back-arrow:hover {
+            color: #ffa64d;
+        }
+        
         .tabs {
             display: flex;
             gap: var(--grid-size);
@@ -265,7 +275,7 @@
 <body>
     <div class="container">
         <header>
-            <h1>SKÅDIS</h1>
+            <h1><a href="index.html" class="back-arrow">↩</a> SKÅDIS</h1>
             <div class="tabs">
                 <button class="tab active" data-type="container">Containers</button>
                 <button class="tab" data-type="simpleHook">Simple Hook</button>

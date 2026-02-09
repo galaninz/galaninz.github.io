@@ -328,8 +328,8 @@
 
             const skills = [
                 { label: 'CAD', details: 'AutoCAD, SketchUp', detailsHtml: 'AutoCAD, SketchUp' },
-                { label: 'BIM', details: 'Revit, Tekla, Sapphire', detailsHtml: 'Revit, Tekla, Sapphire' },
-                { label: 'Structural Analysis', details: 'ETABS, SCAD, Lira, Robot', detailsHtml: '<span class="certificate-link" data-img="Structuristik1.jpg">ETABS</span>, SCAD, Lira, Robot' },
+                { label: 'BIM', details: 'Revit, Tekla, Sapphire, Robot', detailsHtml: 'Revit, Tekla, Sapphire, Robot' },
+                { label: 'Structural Analysis', details: 'ETABS, SCAD, Lira', detailsHtml: '<span class="certificate-link" data-img="Structuristik1.jpg">ETABS</span>, SCAD, Lira' },
                 { label: 'PM and Takeoff', details: 'Navisworks, On-screen Takeoff, MS Project', detailsHtml: '<span class="certificate-link" data-img="NAVISWORKS.jpg">Navisworks</span>, On-screen Takeoff, MS Project' },
                 { label: 'Programming', details: 'C#, Python, Dynamo, VBA', detailsHtml: '<span class="certificate-link" data-img="ITMO.jpg">C#</span>, Python, Dynamo, VBA' },
                 { label: 'Other', details: 'Wolfram Mathematica', detailsHtml: 'Wolfram Mathematica' },
@@ -344,8 +344,10 @@
             ];
 
             const myProjects = [
-                { label: 'SKÅDIS Generator', details: 'Interactive 3D tool for designing custom IKEA SKÅDIS pegboard accessories. Built with Three.js — supports containers, hooks, and hangers with real-time preview and STL export for 3D printing.', detailsHtml: '<a href="skadisgenerator.html" class="contact-link" target="_blank">Interactive 3D tool</a> for designing custom IKEA SKÅDIS pegboard accessories. Built with Three.js — supports containers, hooks, and hangers with real-time preview and STL export for 3D printing.' }
+                { label: 'SKÅDIS Generator', details: 'Interactive 3D tool for designing custom IKEA SKÅDIS pegboard accessories. Built with Three.js — supports containers, hooks, and hangers with real-time preview and STL export for 3D printing.', detailsHtml: '<a href="skadisgenerator.html" class="contact-link" target="_blank">Interactive 3D tool</a> for designing custom IKEA SKÅDIS pegboard accessories. Built with Three.js — supports containers, hooks, and hangers with real-time preview and STL export for 3D printing.' },
+                { label: 'GEKON Attendance', details: 'React Native mobile app for construction crew time tracking. GPS geofencing, OSHA card verification, photo documentation on clock-out, bilingual (EN/ES), Google Sheets backend via Apps Script.', detailsHtml: 'React Native mobile app for construction crew time tracking. GPS geofencing, OSHA card verification, photo documentation on clock-out, bilingual (EN/ES), Google Sheets backend via Apps Script. <a href="privacy-gekon-attendance.html" class="contact-link" target="_blank">Privacy Policy</a>' }
             ];
+
 
             function addRandomSquare(item, index, type) {
                 gridSize = getGridSize();
@@ -378,7 +380,7 @@
 
                 const square = $('<div></div>').addClass('square');
                 
-                let floatingText, detailsText, detailsHtml;
+                let floatingText, detailsText, detailsHtml, isHtml = false;
                 if (type === 'project') {
                     floatingText = `${item.name} (${item.year})`;
                     detailsText = item.details;
@@ -389,7 +391,12 @@
                     detailsHtml = item.detailsHtml;
                 }
 
-                const itemText = $('<div></div>').addClass('item-text').text(floatingText);
+                const itemText = $('<div></div>').addClass('item-text');
+                if (isHtml) {
+                    itemText.html(floatingText);
+                } else {
+                    itemText.text(floatingText);
+                }
                 const itemDetails = $('<div></div>').addClass('item-details')
                     .data('plain', detailsText)
                     .data('fullHtml', detailsHtml)
@@ -677,7 +684,15 @@
                 }
             });
 
+            let lastWidth = $(window).width();
             $(window).resize(function() {
+                const newWidth = $(window).width();
+                if (newWidth === lastWidth) return;
+                lastWidth = newWidth;
+                
+                const wasSorted = sortMode;
+                if (wasSorted) sortMode = false;
+                
                 setBodyHeight();
                 occupiedPositions.clear();
                 [...projectSquares, ...myProjectSquares, ...skillSquares, ...contactSquares].forEach(s => s.remove());
@@ -686,6 +701,8 @@
                 myProjects.forEach((p, i) => addRandomSquare(p, i, 'myproject'));
                 skills.forEach((s, i) => addRandomSquare(s, i, 'skill'));
                 contacts.forEach((c, i) => addRandomSquare(c, i, 'contact'));
+                
+                if (wasSorted) sortProjects();
             });
         });
     </script>
