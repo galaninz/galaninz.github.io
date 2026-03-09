@@ -344,6 +344,7 @@
             ];
 
             const myProjects = [
+                { label: 'CAD-to-BIM Services', details: 'CAD-to-BIM, Scan-to-BIM, existing conditions modeling, and BIM support for renovation, coordination, and preconstruction.', detailsHtml: '<a href="services.html" class="contact-link" target="_blank">CAD-to-BIM, Scan-to-BIM</a>, existing conditions modeling, and BIM support for renovation, coordination, and preconstruction.' },
                 { label: 'SKÅDIS Generator', details: 'Interactive 3D tool for designing custom IKEA SKÅDIS pegboard accessories. Built with Three.js — supports containers, hooks, and hangers with real-time preview and STL export for 3D printing.', detailsHtml: '<a href="skadisgenerator.html" class="contact-link" target="_blank">Interactive 3D tool</a> for designing custom IKEA SKÅDIS pegboard accessories. Built with Three.js — supports containers, hooks, and hangers with real-time preview and STL export for 3D printing.' },
                 { label: 'GEKON Attendance', details: 'React Native mobile app for construction crew time tracking. GPS geofencing, OSHA card verification, photo documentation on clock-out, bilingual (EN/ES), Google Sheets backend via Apps Script.', detailsHtml: 'React Native mobile app for construction crew time tracking. GPS geofencing, OSHA card verification, photo documentation on clock-out, bilingual (EN/ES), Google Sheets backend via Apps Script. <a href="privacy-gekon-attendance.html" class="contact-link" target="_blank">Privacy Policy</a>' }
             ];
@@ -671,6 +672,14 @@
                     $(this).addClass('sorted').text('UNSORT');
                 }
             });
+
+            // Auto-sort if ?sorted=true in URL
+            if (new URLSearchParams(window.location.search).get('sorted') === 'true') {
+                setTimeout(() => {
+                    sortProjects();
+                    $('.sort-button').addClass('sorted').text('UNSORT');
+                }, 300);
+            }
 
             const modal = $('#certificateModal');
             $(document).on('click', '.certificate-link', function() {

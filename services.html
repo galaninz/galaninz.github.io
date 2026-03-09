@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAD-to-BIM and Scan-to-BIM Services | Zakhar Galanin</title>
+    <meta name="description" content="CAD-to-BIM, Scan-to-BIM, and existing conditions modeling services for renovation, coordination, and preconstruction workflows.">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #001f3f;
+            --g: 80px;
+            --accent: #ff851b;
+            --accent-dim: rgba(255,133,27,0.12);
+            --text: #fff;
+            --text-dim: rgba(255,255,255,0.75);
+            --text-faint: rgba(255,255,255,0.4);
+            --border: rgba(255,255,255,0.2);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: var(--bg);
+            font-family: 'Share Tech Mono', 'Orbitron', monospace;
+            color: var(--text);
+            background-image:
+                linear-gradient(to right, rgba(255,255,255,0.08) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,0.08) 1px, transparent 1px);
+            background-size: var(--g) var(--g);
+            line-height: 1.7;
+        }
+
+        /* Row 0: header h=1g, left-pad 1g */
+        header {
+            padding: 0 var(--g);
+            height: var(--g);
+        }
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem; font-weight: 700; color: var(--text);
+            margin: 0; letter-spacing: 2px; text-transform: uppercase;
+            line-height: var(--g); height: var(--g);
+        }
+        .back-arrow { color: var(--accent); text-decoration: none; margin-right: 8px; }
+        .back-arrow:hover { color: #ffa64d; }
+
+        /* Content left-pad 1g */
+        .content { padding-left: var(--g); padding-right: var(--g); }
+
+        /* Row 1: intro text h=1g */
+        .intro-text {
+            font-size: 14px; color: var(--text-dim);
+            max-width: 700px;
+            height: var(--g);
+            display: flex; align-items: center;
+        }
+
+        /* Row 2: h2 h=1g */
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(0.8rem, 1.5vw, 1rem);
+            font-weight: 700; color: var(--accent);
+            text-transform: uppercase; letter-spacing: 2px;
+            height: var(--g); line-height: var(--g);
+            margin: 0;
+        }
+
+        /* Rows 3-6: service cards, 3 columns, no gap, h=4g each */
+        .services-row {
+            display: grid;
+            grid-template-columns: repeat(3, calc(var(--g) * 4));
+            gap: var(--g);
+        }
+        .service-card {
+            border: 1px solid var(--border);
+            padding: 20px;
+            height: calc(var(--g) * 8);
+            position: relative;
+            background: rgba(0, 31, 63, 0.5);
+            transition: border-color 0.3s, background 0.3s;
+            overflow: hidden;
+        }
+        .service-card:hover { border-color: var(--accent); background: var(--accent-dim); }
+
+        .service-card::before {
+            content: attr(data-num);
+            position: absolute; top: 10px; right: 14px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 10px; color: var(--text-faint); letter-spacing: 1px;
+        }
+        .service-card h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem; font-weight: 500;
+            letter-spacing: 1px; margin-bottom: 10px; color: var(--text);
+        }
+        .service-card p { font-size: 14px; color: var(--text-dim); margin-bottom: 14px; line-height: 1.6; }
+        .service-detail {
+            display: grid; grid-template-columns: auto 1fr;
+            gap: 4px 14px; font-size: 12px; margin-bottom: 16px;
+        }
+        .service-detail .dl { color: var(--accent); text-transform: uppercase; letter-spacing: 1px; font-size: 10px; font-family: 'Orbitron', sans-serif; }
+        .service-detail .dv { color: var(--text-dim); line-height: 1.5; }
+        .price-tag {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 13px; color: var(--accent); font-weight: 700; letter-spacing: 1px;
+        }
+
+        /* Row 7: pricing note h=1g */
+        .pricing-note {
+            font-size: 12px; color: var(--text-faint);
+            height: var(--g); display: flex; align-items: center;
+        }
+
+        /* Row 8: h2 h=1g */
+        /* Rows 9+: sample cards */
+        .samples-grid {
+            display: grid;
+            grid-template-columns: repeat(3, calc(var(--g) * 4));
+            gap: var(--g);
+        }
+        .sample-card {
+            border: 1px solid var(--border);
+            background: rgba(0, 31, 63, 0.5);
+            overflow: hidden;
+            transition: border-color 0.3s;
+            height: calc(var(--g) * 6);
+        }
+        .sample-card:hover { border-color: var(--accent); }
+
+        .sample-viewer {
+            width: 100%;
+            height: calc(var(--g) * 3);
+            background: rgba(0,12,24,0.6);
+            position: relative; overflow: hidden;
+            border-bottom: 1px solid var(--border);
+        }
+        .sample-viewer canvas { width: 100%; height: 100%; display: block; }
+        .sample-viewer-placeholder {
+            position: absolute; inset: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Orbitron', sans-serif; font-size: 11px;
+            color: var(--text-faint); letter-spacing: 2px; text-transform: uppercase;
+            
+        }
+
+        .sample-body { padding: 16px 20px; }
+        .sample-card h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.78rem; font-weight: 500; letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        .sample-meta {
+            display: grid; grid-template-columns: auto 1fr;
+            gap: 2px 12px; font-size: 11px; margin-bottom: 6px;
+        }
+        .meta-label { color: var(--text-faint); text-transform: uppercase; letter-spacing: 1px; font-size: 10px; }
+        .meta-value { color: var(--text-dim); }
+        .sample-desc { font-size: 12px; color: var(--text-dim); }
+
+        /* Contact row h=1g */
+        @media (max-width: 1000px) {
+            .services-row, .samples-grid { grid-template-columns: repeat(2, calc(var(--g) * 4)); }
+            .service-card { height: auto; min-height: calc(var(--g) * 5); }
+        }
+        @media (max-width: 768px) {
+            :root { --g: 60px; }
+            header, .content { padding-left: 20px; padding-right: 20px; }
+            h1 { font-size: 1.4rem; }
+            .services-row, .samples-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 480px) { h1 { font-size: 1.1rem; } }
+    </style>
+</head>
+<body>
+    <header>
+        <h1><a href="index.html?sorted=true" class="back-arrow">↩</a> TO BIM OR NOT TO BIM</h1>
+    </header>
+    <div class="content">
+        <div class="intro-text">BIM models from CAD drawings, point clouds, and field documentation for renovation, coordination, and preconstruction.</div>
+
+        <h2>Services</h2>
+        <div class="services-row">
+            <div class="service-card" data-num="01">
+                <h3>CAD-to-BIM</h3>
+                <p>Converting 2D documentation — DWG files, PDF drawings, scanned plans — into a coordinated 3D BIM model ready for renovation planning, preconstruction, and consultant coordination.</p>
+                <div class="service-detail">
+                    <span class="dl">Input</span><span class="dv">DWG, PDF, scanned drawings, sketches, field photos, markups</span>
+                    <span class="dl">LOD</span><span class="dv">LOD 200–300 depending on source quality and project needs</span>
+                    <span class="dl">Output</span><span class="dv">Revit model (.rvt), IFC, PDF floor plans / sections / elevations, NWC on request</span>
+                    <span class="dl">Scope</span><span class="dv">Walls, slabs, roofs, openings, stairs, levels, grids. MEP major routing on request</span>
+                    <span class="dl">Timeline</span><span class="dv">5–15 business days depending on building size and complexity</span>
+                </div>
+                <div class="price-tag">From $1,500 / $0.60 per SF</div>
+            </div>
+            <div class="service-card" data-num="02">
+                <h3>Scan-to-BIM</h3>
+                <p>Building a BIM model from point cloud data, laser scans, or photogrammetry surveys — for existing conditions documentation, façade reconstruction, and coordination of renovation projects.</p>
+                <div class="service-detail">
+                    <span class="dl">Input</span><span class="dv">E57, RCP/RCS point clouds, LAS/LAZ, photogrammetry meshes, survey reports</span>
+                    <span class="dl">LOD</span><span class="dv">LOD 200–350 based on scan density and required precision</span>
+                    <span class="dl">Output</span><span class="dv">Revit model (.rvt), IFC, PDF sheets, point cloud linked in model for reference</span>
+                    <span class="dl">Scope</span><span class="dv">Structural shell, floor plates, exterior envelope, irregular geometry, façade elements. MEP traces if visible in scan</span>
+                    <span class="dl">Timeline</span><span class="dv">7–20 business days depending on area and geometry complexity</span>
+                </div>
+                <div class="price-tag">From $1.00 per SF</div>
+            </div>
+            <div class="service-card" data-num="03">
+                <h3>BIM Support</h3>
+                <p>Ongoing support for existing BIM models — cleanup of poorly structured files, revision updates, export preparation, clash resolution, and coordination assistance for multi-discipline workflows.</p>
+                <div class="service-detail">
+                    <span class="dl">Input</span><span class="dv">Existing Revit models, IFC files, markups, RFIs, updated drawings, coordination notes</span>
+                    <span class="dl">LOD</span><span class="dv">Matching existing model LOD, upgrades available on request</span>
+                    <span class="dl">Output</span><span class="dv">Updated Revit model, IFC/NWC exports, clash reports, PDF documentation</span>
+                    <span class="dl">Scope</span><span class="dv">Model cleanup, family fixes, view setup, export configuration, revision cycles, QA checks</span>
+                    <span class="dl">Timeline</span><span class="dv">1–5 business days per revision cycle, ongoing retainer available</span>
+                </div>
+                <div class="price-tag">From $95 / hour</div>
+            </div>
+        </div>
+        <div class="pricing-note">Final cost depends on project size, geometry complexity, source data quality, level of detail, and model use.</div>
+
+        <h2>Sample Projects</h2>
+        <div class="samples-grid">
+            <div class="sample-card">
+                <div class="sample-viewer" id="viewer0" data-ifc="Ifc4_SampleHouse.ifc">
+                    <div class="sample-viewer-placeholder">Loading model...</div>
+                </div>
+                <div class="sample-body">
+                    <h3>Residential — IFC Sample</h3>
+                    <div class="sample-meta">
+                        <span class="meta-label">Input</span><span class="meta-value">CAD + photos</span>
+                        <span class="meta-label">Scope</span><span class="meta-value">Existing conditions BIM</span>
+                        <span class="meta-label">Output</span><span class="meta-value">RVT + IFC</span>
+                    </div>
+                    <p class="sample-desc">Architectural shell from 2D documentation with IFC export.</p>
+                </div>
+            </div>
+            <div class="sample-card">
+                <div class="sample-viewer" id="viewer1">
+                    <div class="sample-viewer-placeholder">Coming soon</div>
+                </div>
+                <div class="sample-body">
+                    <h3>Multifamily Scan-to-BIM</h3>
+                    <div class="sample-meta">
+                        <span class="meta-label">Input</span><span class="meta-value">Point cloud</span>
+                        <span class="meta-label">Scope</span><span class="meta-value">As-built for MEP coord</span>
+                        <span class="meta-label">Output</span><span class="meta-value">RVT + IFC + PDF</span>
+                    </div>
+                    <p class="sample-desc">Six-story multifamily from laser scan data.</p>
+                </div>
+            </div>
+            <div class="sample-card">
+                <div class="sample-viewer" id="viewer2">
+                    <div class="sample-viewer-placeholder">Coming soon</div>
+                </div>
+                <div class="sample-body">
+                    <h3>Office CAD-to-BIM</h3>
+                    <div class="sample-meta">
+                        <span class="meta-label">Input</span><span class="meta-value">PDF + field notes</span>
+                        <span class="meta-label">Scope</span><span class="meta-value">Preconstruction model</span>
+                        <span class="meta-label">Output</span><span class="meta-value">Revit + NWC</span>
+                    </div>
+                    <p class="sample-desc">Office fit-out from PDFs and field measurements.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+<script src="https://unpkg.com/three@0.128.0/build/three.min.js"></script>
+<script src="https://unpkg.com/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script type="module">
+import * as WebIFC from 'https://cdn.jsdelivr.net/npm/web-ifc@0.0.44/web-ifc-api.js';
+
+function buildDemoHouse(scene) {
+    const mW = new THREE.MeshPhysicalMaterial({color:0xdddddd,roughness:0.7});
+    const mF = new THREE.MeshPhysicalMaterial({color:0xbbbbbb,roughness:0.8});
+    const mR = new THREE.MeshPhysicalMaterial({color:0x999999,roughness:0.6});
+    const mG = new THREE.MeshPhysicalMaterial({color:0x88bbff,roughness:0.2,transparent:true,opacity:0.4});
+    const mA = new THREE.MeshPhysicalMaterial({color:0xff851b,roughness:0.5});
+    function bx(w,h,d,m){const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);o.castShadow=true;o.receiveShadow=true;return o;}
+
+    // 2 floors
+    for(let f=0;f<2;f++){
+        const slab=bx(14,0.25,10,mF);slab.position.set(0,f*3.5,0);scene.add(slab);
+        // walls
+        const wl=bx(0.2,3.2,10,mW);wl.position.set(-7,f*3.5+1.7,0);scene.add(wl);
+        const wr=bx(0.2,3.2,10,mW);wr.position.set(7,f*3.5+1.7,0);scene.add(wr);
+        const wb=bx(14,3.2,0.2,mW);wb.position.set(0,f*3.5+1.7,-5);scene.add(wb);
+        const wf=bx(14,3.2,0.2,mW);wf.position.set(0,f*3.5+1.7,5);scene.add(wf);
+        // interior
+        const wi=bx(0.15,3.2,10,mW);wi.position.set(-2,f*3.5+1.7,0);scene.add(wi);
+        // windows front
+        for(let i=-1;i<=1;i++){
+            const win=bx(1.8,1.5,0.08,mG);win.position.set(i*3.5+2,f*3.5+2.2,5.15);scene.add(win);
+        }
+    }
+    // roof
+    const roof=bx(15,0.3,11,mR);roof.position.set(0,7,0);scene.add(roof);
+    // entrance
+    const step=bx(2.5,0.3,1.5,mA);step.position.set(2,0.15,5.75);scene.add(step);
+}
+
+function setupScene(container) {
+    const canvas = document.createElement('canvas');
+    canvas.style.width='100%';canvas.style.height='100%';canvas.style.display='block';
+    container.appendChild(canvas);
+    const w=container.clientWidth, h=container.clientHeight;
+
+    const scene=new THREE.Scene();
+    scene.background=new THREE.Color(0x001428);
+    const camera=new THREE.PerspectiveCamera(50,w/h,0.1,500);
+    camera.position.set(12,10,14);
+
+    const renderer=new THREE.WebGLRenderer({canvas,antialias:true});
+    renderer.setSize(w,h);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+    renderer.shadowMap.enabled=true;
+    renderer.toneMapping=THREE.ACESFilmicToneMapping;
+
+    scene.add(new THREE.HemisphereLight(0x8899bb,0x223344,0.5));
+    const key=new THREE.DirectionalLight(0xffffff,0.8);
+    key.position.set(25,35,20);key.castShadow=true;
+    key.shadow.mapSize.set(1024,1024);scene.add(key);
+    scene.add(new THREE.DirectionalLight(0x6688cc,0.3).translateOnAxis(new THREE.Vector3(-1,0.5,-1).normalize(),25));
+
+    const ctrl=new THREE.OrbitControls(camera,canvas);
+    ctrl.enableDamping=true;ctrl.dampingFactor=0.08;
+    ctrl.autoRotate=true;ctrl.autoRotateSpeed=0.6;
+    ctrl.maxPolarAngle=Math.PI/2;
+
+    let art;
+    ctrl.addEventListener('start',()=>{ctrl.autoRotate=false;clearTimeout(art)});
+    ctrl.addEventListener('end',()=>{art=setTimeout(()=>ctrl.autoRotate=true,3000)});
+    (function a(){requestAnimationFrame(a);ctrl.update();renderer.render(scene,camera)})();
+
+    window.addEventListener('resize',()=>{
+        const nw=container.clientWidth,nh=container.clientHeight;
+        camera.aspect=nw/nh;camera.updateProjectionMatrix();renderer.setSize(nw,nh);
+    });
+
+    return {scene,camera,ctrl};
+}
+
+function fitCamera(obj,camera,ctrl){
+    const box=new THREE.Box3().setFromObject(obj);
+    const c=box.getCenter(new THREE.Vector3());
+    const s=box.getSize(new THREE.Vector3());
+    const d=Math.max(s.x,s.y,s.z)*1.5;
+    camera.position.set(c.x+d*0.7,c.y+d*0.5,c.z+d*0.7);
+    ctrl.target.copy(c);ctrl.update();
+}
+
+window.launchViewer = async function(idx) {
+    if(window['_v'+idx])return;
+    window['_v'+idx]=true;
+
+    const container=document.getElementById('viewer'+idx);
+    const placeholder=container.querySelector('.sample-viewer-placeholder');
+    placeholder.textContent='Loading...';
+
+    const {scene,camera,ctrl}=setupScene(container);
+    const ifcFile=container.dataset.ifc;
+
+    if(ifcFile){
+        try {
+            const api=new WebIFC.IfcAPI();
+            api.SetWasmPath('https://cdn.jsdelivr.net/npm/web-ifc@0.0.44/');
+            await api.Init();
+
+            const resp=await fetch(ifcFile);
+            if(!resp.ok) throw new Error('HTTP '+resp.status);
+            const buf=new Uint8Array(await resp.arrayBuffer());
+            const mid=api.OpenModel(buf);
+            const meshes=api.LoadAllGeometry(mid);
+
+            const matS=new THREE.MeshPhysicalMaterial({color:0xdddddd,roughness:0.6,side:THREE.DoubleSide});
+            const matG=new THREE.MeshPhysicalMaterial({color:0x88bbff,roughness:0.3,transparent:true,opacity:0.35,side:THREE.DoubleSide});
+            const group=new THREE.Group();
+
+            for(let i=0;i<meshes.size();i++){
+                const mesh=meshes.get(i);
+                const pgs=mesh.geometries;
+                for(let j=0;j<pgs.size();j++){
+                    const pg=pgs.get(j);
+                    const geo=api.GetGeometry(mid,pg.geometryExpressID);
+                    const vR=api.GetVertexArray(geo.GetVertexData(),geo.GetVertexDataSize());
+                    const iR=api.GetIndexArray(geo.GetIndexData(),geo.GetIndexDataSize());
+                    const pos=[],norm=[];
+                    for(let k=0;k<vR.length;k+=6){pos.push(vR[k],vR[k+1],vR[k+2]);norm.push(vR[k+3],vR[k+4],vR[k+5]);}
+                    const bg=new THREE.BufferGeometry();
+                    bg.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));
+                    bg.setAttribute('normal',new THREE.Float32BufferAttribute(norm,3));
+                    bg.setIndex(Array.from(iR));
+                    const m=new THREE.Mesh(bg,pg.color.w<0.9?matG:matS);
+                    m.matrix=(new THREE.Matrix4()).fromArray(pg.flatTransformation);
+                    m.matrixAutoUpdate=false;m.castShadow=true;m.receiveShadow=true;
+                    group.add(m);geo.delete();
+                }
+            }
+            scene.add(group);api.CloseModel(mid);
+            fitCamera(group,camera,ctrl);
+            placeholder.style.display='none';
+            return;
+        } catch(err){
+            console.warn('IFC failed (CORS on file:// is normal), using demo:',err.message);
+        }
+    }
+
+    // Fallback: demo building
+    buildDemoHouse(scene);
+    fitCamera(scene,camera,ctrl);
+    placeholder.style.display='none';
+};
+
+// Auto-launch all viewers when page loads
+// Auto-launch residential viewer only
+window.launchViewer(0);
+</script>
+</body>
+</html>
