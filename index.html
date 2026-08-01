@@ -1,719 +1,467 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zakhar's Portfolio</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zakhar's Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  /* ---- all tunable values in one place ---- */
+  :root {
+    --bg: #001f3f;
+    --accent: #ff851b;
+    --accent-hover: #ffa64d;
+    --line: rgba(255,255,255,0.2);
+    --grid-size: 80px;
+    --header-height: 80px;
+    --header-pad: 80px;
+    --logo-size: 60px;
+    --title-size: 14px;
+    --detail-size: 12px;
+    --dot-size: 12px;
+  }
+  @media (max-width: 800px) {
+    :root {
+      --grid-size: 60px; --header-height: 60px; --header-pad: 40px;
+      --logo-size: 30px; --title-size: 18px; --detail-size: 15px; --dot-size: 12px;
+    }
+  }
+  @media (max-width: 600px) {
+    :root {
+      --grid-size: 60px; --header-height: 40px; --header-pad: 20px;
+      --logo-size: 24px; --title-size: 16px; --detail-size: 14px; --dot-size: 8px;
+    }
+  }
 
-        body {
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-            overflow-y: auto;
-            background-color: #001f3f;
-            font-family: 'Orbitron', Arial, sans-serif;
-            position: relative;
-            background-image:
-                linear-gradient(to right, rgba(255, 255, 255, 0.2) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255, 255, 255, 0.2) 1px, transparent 1px);
-            background-size: 80px 80px;
-            background-attachment: local;
-        }
+  * { box-sizing: border-box; }
 
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            padding: 0 80px;
-            height: 80px;
-            position: relative;
-            z-index: 2;
-        }
+  /* html keeps the solid colour so the body background does NOT propagate
+     to the canvas — that lets us cut the grid on a full cell */
+  html { background: var(--bg); }
 
-        .logo {
-            font-size: 60px;
-            font-weight: bold;
-            color: white;
-            margin: 0;
-            line-height: 1;
-        }
+  body {
+    margin: 0; padding: 0;
+    overflow-x: hidden;
+    font-family: 'Orbitron', Arial, sans-serif;
+    position: relative;
+    background-color: transparent;
+    background-image:
+      linear-gradient(to right, var(--line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+    background-size: var(--grid-size) var(--grid-size);
+    background-attachment: local;
+    /* closing lines on the right and bottom edge of the grid */
+    box-shadow: inset -1px -1px 0 0 var(--line);
+  }
 
-        .highlight-dot {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            background-color: #ff851b;
-            border-radius: 0;
-            vertical-align: middle;
-            margin: 0 2px;
-        }
+  .header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    padding: 0 var(--header-pad);
+    height: var(--header-height);
+    position: relative; z-index: 3;
+  }
+  .logo, .sort-button {
+    font-size: var(--logo-size);
+    font-weight: 700; line-height: 1; margin: 0; padding: 0;
+    font-family: 'Orbitron', Arial, sans-serif;
+  }
+  .logo { color: #fff; }
+  .highlight-dot {
+    display: inline-block;
+    width: var(--dot-size); height: var(--dot-size);
+    background: var(--accent);
+    vertical-align: middle;
+    margin: 0 2px;
+  }
+  .sort-button {
+    color: var(--accent); background: none; border: none; cursor: pointer;
+    transition: color .3s;
+  }
+  .sort-button:hover { color: var(--accent-hover); }
+  .sort-button.sorted { color: #fff; }
 
-        .sort-button {
-            font-size: 60px;
-            font-weight: bold;
-            color: #ff851b;
-            cursor: pointer;
-            border: none;
-            background: none;
-            font-family: 'Orbitron', Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            line-height: 1;
-            transition: color 0.3s;
-        }
+  .container {
+    position: relative; width: 100%; z-index: 1;
+    min-height: calc(100vh - var(--header-height));
+  }
 
-        .sort-button:hover {
-            color: #ffa64d;
-        }
+  .item-link { position: absolute; z-index: 2; }
+  .square {
+    width: var(--dot-size); height: var(--dot-size);
+    background: var(--accent);
+    position: relative;
+  }
 
-        .sort-button.sorted {
-            color: white;
-        }
+  .item-text {
+    color: #fff; font-size: var(--title-size); line-height: 1.15;
+    position: absolute; left: 20px; top: -2px;
+    white-space: nowrap; text-align: left;
+    background: rgba(0,31,63,.85);
+    padding: 2px 6px; border-radius: 2px;
+  }
+  .item-text.sorted { background: transparent; padding: 0; }
 
-        .container {
-            position: relative;
-            width: 100%;
-            min-height: calc(100vh - 80px);
-            z-index: 1;
-        }
+  .item-details {
+    color: #fff; font-size: var(--detail-size); line-height: 1.25;
+    position: absolute; left: 20px; top: 20px;
+    display: none; white-space: normal; text-align: left;
+    word-wrap: break-word; overflow-wrap: break-word;
+  }
+  .show-details { display: block; }
 
-        .item-link {
-            position: absolute;
-            transition: transform 0.5s linear;
-            z-index: 2;
-        }
+  a { color: #fff; text-decoration: none; }
+  a:hover { color: var(--accent); }
+  .certificate-link, .contact-link, a.contact-link {
+    color: var(--accent) !important;
+    text-decoration: underline !important;
+    cursor: pointer; transition: color .3s;
+  }
+  .certificate-link:hover, .contact-link:hover, a.contact-link:hover { color: var(--accent-hover) !important; }
 
-        .square {
-            width: 12px;
-            height: 12px;
-            background-color: #ff851b;
-            border: 1px solid transparent;
-            position: relative;
-        }
-
-        .item-text {
-            color: white;
-            font-size: 14px;
-            position: absolute;
-            white-space: nowrap;
-            text-align: left;
-            left: 20px;
-            top: -2px;
-            background: rgba(0, 31, 63, 0.85);
-            padding: 2px 6px;
-            border-radius: 2px;
-        }
-
-        .item-text.sorted {
-            background: transparent;
-            padding: 0;
-        }
-
-        .item-details {
-            color: white;
-            font-size: 12px;
-            position: absolute;
-            left: 20px;
-            top: 20px;
-            display: none;
-            white-space: normal;
-            text-align: left;
-            background: transparent;
-            padding: 0;
-        }
-
-        .show-details {
-            display: block;
-        }
-
-        a {
-            color: white;
-            text-decoration: none;
-        }
-
-        a:hover {
-            color: #ff851b;
-        }
-
-        .certificate-link,
-        .contact-link,
-        a.contact-link {
-            color: #ff851b !important;
-            text-decoration: underline !important;
-            cursor: pointer;
-            transition: color 0.3s;
-        }
-
-        .certificate-link:hover,
-        .contact-link:hover,
-        a.contact-link:hover {
-            color: #ffa64d !important;
-        }
-
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 100;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.8);
-        }
-
-        .modal-content {
-            margin: 5% auto;
-            padding: 20px;
-            position: relative;
-            width: 80%;
-            max-width: 800px;
-            background-color: #001f3f;
-        }
-
-        .certificate-image {
-            width: 100%;
-            max-height: 80vh;
-        }
-
-        .close {
-            position: absolute;
-            top: 10px;
-            right: 20px;
-            color: #ff851b;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: color 0.3s;
-        }
-
-        .close:hover {
-            color: #ffffff;
-        }
-
-        /* Responsive */
-        @media (max-width: 800px) {
-            body {
-                background-size: 60px 60px;
-            }
-            
-            .logo, .sort-button {
-                font-size: 32px;
-            }
-            .header {
-                padding: 0 40px;
-                height: 60px;
-            }
-            .item-text {
-                font-size: 11px;
-            }
-            .item-details {
-                font-size: 9px;
-            }
-            .highlight-dot {
-                font-size: 12px;
-                width: 12px;
-                height: 12px;
-            }
-        }
-
-        @media (max-width: 600px) {
-            body {
-                background-size: 60px 60px;
-            }
-            
-            .logo, .sort-button {
-                font-size: 24px;
-            }
-            .header {
-                padding: 0 40px;
-                height: 40px;
-            }
-            .square {
-                width: 8px;
-                height: 8px;
-            }
-            .item-text {
-                font-size: 10px;
-            }
-            .item-details {
-                font-size: 8px;
-            }
-            .highlight-dot {
-                font-size: 8px;
-                width: 8px;
-                height: 8px;
-            }
-        }
-        }
-    </style>
+  /* Modal */
+  .modal {
+    display: none; position: fixed; z-index: 100; inset: 0;
+    overflow: auto; background: rgba(0,0,0,.8);
+  }
+  .modal-content {
+    margin: 5% auto; padding: 20px; position: relative;
+    width: 80%; max-width: 800px; background: var(--bg);
+  }
+  .certificate-image { width: 100%; max-height: 80vh; }
+  .close {
+    position: absolute; top: 10px; right: 20px;
+    color: var(--accent); font-size: 28px; font-weight: 700;
+    cursor: pointer; transition: color .3s;
+  }
+  .close:hover { color: #fff; }
+</style>
 </head>
 <body>
-    <div class="header">
-        <div class="logo">ZAKHARGALAN<span class="highlight-dot"></span>IN</div>
-        <button class="sort-button">SORT</button>
+  <div class="header">
+    <div class="logo">ZAKHARGALAN<span class="highlight-dot"></span>IN</div>
+    <button class="sort-button">SORT</button>
+  </div>
+  <div class="container"></div>
+
+  <div id="certificateModal" class="modal">
+    <div class="modal-content">
+      <span class="close">×</span>
+      <img id="certificateImage" src="" alt="Certificate" class="certificate-image">
     </div>
-    <div class="container"></div>
+  </div>
 
-    <div id="certificateModal" class="modal">
-        <div class="modal-content">
-            <span class="close">×</span>
-            <img id="certificateImage" src="" alt="Certificate" class="certificate-image">
-        </div>
-    </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(function () {
+  const $body = $('body'), container = $('.container'), modal = $('#certificateModal');
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            const container = $('.container');
-            let gridSize = 80;
-            let squareSize = 12;
-            const projectSquares = [];
-            const myProjectSquares = [];
-            const skillSquares = [];
-            const contactSquares = [];
-            let occupiedPositions = new Set();
-            let sortMode = false;
+  const S = { sorted: false, run: 0 };                 // run = token to kill stale timers
+  const groups = { project: [], myproject: [], skill: [], contact: [] };
+  const occupied = new Set();
 
-            // Adjust grid size based on screen width
-            function getGridSize() {
-                const width = $(window).width();
-                if (width <= 600) return 60;
-                if (width <= 800) return 60;
-                return 80;
-            }
+  /* ---------- data ---------- */
+  const projects = [
+    { name: 'K&G Gekon', year: '2025 - Present', details: 'Senior Estimator: GC projects up to $55M. Workflow optimization — automated manual processes: material takeoffs, manufacturer pricing requests and crew time tracking.' },
+    { name: 'Freelance Estimator', year: '2019 - 2025', details: 'Estimator. Reviewed drawings/specifications and provided cost estimates for projects up to $2M across all design stages, preparing detailed material submittal packages.' },
+    { name: 'Stroy Standard', year: '2019', details: 'Oversaw final finishing work for developer-delivered apartments; managed materials, documentation, and client coordination; prepared proposals and visualizations.' },
+    { name: 'RestStroyGroup', year: '2019', details: 'Engineer for monastic complex restoration; produced monthly execution docs, inspected subcontractor documentation, maintained journals/reports and oversaw on-site logistics.' },
+    { name: 'Ivalon', year: '2019', details: 'Site Supervisor for reconstruction of a monastic complex, managing demolition, structural work, finishes, timekeeping, reporting and materials for a 50-person team.' },
+    { name: 'Earlier experience', year: '2014 - 2018', details: 'Concept-life, StroyMontazhKomplekt, Comfort Zone, TransAutomatics, Legion, ArtStroyProject, BaltHydroProject, Izhevsk Dept. of Architecture — engineer, site manager, estimator and architect-designer roles.' }
+  ];
 
-            function getSquareSize() {
-                return $(window).width() <= 600 ? 8 : 12;
-            }
+  const myProjects = [
+    { label: 'CAD-to-BIM Services', details: 'CAD-to-BIM, Scan-to-BIM, existing conditions modeling, and BIM support for renovation, coordination, and preconstruction.', detailsHtml: '<a href="services.html" class="contact-link" target="_blank">CAD-to-BIM, Scan-to-BIM</a>, existing conditions modeling, and BIM support for renovation, coordination, and preconstruction.' },
+    { label: 'SKÅDIS Generator', details: 'Interactive 3D tool for designing custom IKEA SKÅDIS pegboard accessories. Built with Three.js — containers, hooks and hangers with real-time preview and STL export for 3D printing.', detailsHtml: '<a href="skadisgenerator.html" class="contact-link" target="_blank">Interactive 3D tool</a> for designing custom IKEA SKÅDIS pegboard accessories. Built with Three.js — containers, hooks and hangers with real-time preview and STL export for 3D printing.' },
+    { label: 'GEKON Attendance', details: 'React Native mobile app for construction crew time tracking. GPS geofencing, OSHA card verification, photo documentation on clock-out, bilingual (EN/ES), Google Sheets backend via Apps Script.', detailsHtml: 'React Native mobile app for construction crew time tracking. GPS geofencing, OSHA card verification, photo documentation on clock-out, bilingual (EN/ES), Google Sheets backend via Apps Script. <a href="privacy-gekon-attendance.html" class="contact-link" target="_blank">Privacy Policy</a>' }
+  ];
 
-            // Set body height to fit complete grid cells
-            function setBodyHeight() {
-                const currentGridSize = getGridSize();
-                const viewportHeight = $(window).height();
-                const fullCells = Math.floor(viewportHeight / currentGridSize);
-                const bodyHeight = fullCells * currentGridSize;
-                
-                // Set both min-height and actual height for unsorted state
-                $('body').css({
-                    'min-height': bodyHeight + 'px',
-                    'height': sortMode ? 'auto' : bodyHeight + 'px',
-                    'background-size': currentGridSize + 'px ' + currentGridSize + 'px'
-                });
-            }
+  const skills = [
+    { label: 'Education', details: 'BSc, Peter the Great St. Petersburg Polytechnic University — Construction of Unique Buildings and Structures. Evaluated in the US as Civil Engineering.' },
+    { label: 'CAD', details: 'AutoCAD, SketchUp' },
+    { label: 'BIM', details: 'Revit, Tekla, Sapphire' },
+    { label: 'Structural Analysis', details: 'ETABS, SCAD, Lira, Robot', detailsHtml: '<span class="certificate-link" data-img="Structuristik1.jpg">ETABS</span>, SCAD, Lira, Robot' },
+    { label: 'PM and Takeoff', details: 'Navisworks, On-screen Takeoff, MS Project', detailsHtml: '<span class="certificate-link" data-img="NAVISWORKS.jpg">Navisworks</span>, On-screen Takeoff, MS Project' },
+    { label: 'Programming', details: 'C#, Python, Dynamo, VBA', detailsHtml: '<span class="certificate-link" data-img="ITMO.jpg">C#</span>, Python, Dynamo, VBA' },
+    { label: 'Other', details: 'Wolfram Mathematica' },
+    { label: 'Language', details: 'Russian, English' }
+  ];
 
-            setBodyHeight();
+  const contacts = [
+    { label: 'Phone', details: '+1 929 784-9752', detailsHtml: '<a href="tel:+19297849752" class="contact-link">+1 929 784-9752</a>' },
+    { label: 'Email', details: 'zakhargalanin@gmail.com', detailsHtml: '<a href="mailto:zakhargalanin@gmail.com" class="contact-link">zakhargalanin@gmail.com</a>' },
+    { label: 'Location', details: 'New York' },
+    { label: 'GitHub', details: 'www.github.com/galaninz', detailsHtml: '<a href="https://www.github.com/galaninz" class="contact-link" target="_blank">www.github.com/galaninz</a>' }
+  ];
 
-            const projects = [
-                { name: 'K&G Gekon', year: '2025 - Present', details: 'Senior Estimator. GC projects up to $55M — reviewing drawings/specifications and providing cost estimates across all design stages.' },
-                { name: 'Freelance Estimator', year: '2019 - 2025', details: 'Estimator. Reviewed drawings/specifications and provided cost estimates for projects up to $2M across all design stages, preparing detailed material submittal packages.' },
-                { name: 'Stroy Standard', year: '2019', details: 'Oversaw final finishing work for developer-delivered apartments; managed materials, documentation, and client coordination; prepared proposals and visualizations.' },
-                { name: 'RestStroyGroup', year: '2019', details: 'Engineer for monastic complex restoration; produced monthly execution docs, inspected subcontractor documentation, maintained journals/reports and oversaw on-site logistics.' },
-                { name: 'Ivalon', year: '2019', details: 'Site Supervisor for reconstruction of a monastic complex, managing demolition, structural work, finishes, timekeeping, reporting and materials for a 50-person team.' },
-                { name: 'Concept-life', year: '2018', details: 'Architect-Designer: created sketches and drawings, produced visualizations and cost estimates, and coordinated procurement and approvals to meet client expectations.' },
-                { name: 'StroyMontazhKomplekt', year: '2018', details: 'Engineer: Developed execution documentation for technical pipelines and metal structures on a high-security site for an international contractor under rotational schedule.' },
-                { name: 'Comfort Zone', year: '2018', details: 'Estimator: Calculated volumes for apartment renovations and delivered detailed, competitive estimates.' },
-                { name: 'TransAutomatics', year: '2018', details: 'Engineer: Compiled execution docs, designed/visualized projects, verified construction volumes, and prepared supply schedules and commercial proposals.' },
-                { name: 'Legion', year: '2017', details: 'Site Manager: Oversaw quality control, inspections, execution documentation, supply chain and record keeping.' },
-                { name: 'ArtStroyProject', year: '2016', details: 'Architect: Created architectural and structural plans and provided visualizations for project development.' },
-                { name: 'BaltHydroProject', year: '2015', details: 'Design Engineer: Assisted in preparing working documentation for various architectural and infrastructure projects.' },
-                { name: 'Izhevsk Department of Architecture', year: '2014', details: 'Assistant: Provided multi-functional support and gained broad experience in project development and execution.' }
-            ];
+  /* ---------- helpers: CSS is the single source of truth ---------- */
+  const cssNum = n => parseFloat(getComputedStyle(document.documentElement).getPropertyValue(n)) || 0;
+  const G   = () => cssNum('--grid-size') || 80;
+  const DOT = () => cssNum('--dot-size') || 12;
+  const all = () => [...groups.project, ...groups.myproject, ...groups.skill, ...groups.contact];
 
-            const skills = [
-                { label: 'CAD', details: 'AutoCAD, SketchUp', detailsHtml: 'AutoCAD, SketchUp' },
-                { label: 'BIM', details: 'Revit, Tekla, Sapphire', detailsHtml: 'Revit, Tekla, Sapphire' },
-                { label: 'Structural Analysis', details: 'ETABS, SCAD, Lira, Robot', detailsHtml: '<span class="certificate-link" data-img="Structuristik1.jpg">ETABS</span>, SCAD, Lira, Robot' },
-                { label: 'PM and Takeoff', details: 'Navisworks, On-screen Takeoff, MS Project', detailsHtml: '<span class="certificate-link" data-img="NAVISWORKS.jpg">Navisworks</span>, On-screen Takeoff, MS Project' },
-                { label: 'Programming', details: 'C#, Python, Dynamo, VBA', detailsHtml: '<span class="certificate-link" data-img="ITMO.jpg">C#</span>, Python, Dynamo, VBA' },
-                { label: 'Other', details: 'Wolfram Mathematica', detailsHtml: 'Wolfram Mathematica' },
-                { label: 'Language', details: 'Russian, English', detailsHtml: 'Russian, English' }
-            ];
+  // container starts under the header — this offset puts dots exactly on grid lines
+  const offsetY = () => { const g = G(); return (g - (Math.round(container.offset().top) % g)) % g; };
+  const firstY  = () => offsetY() + G();
+  const headerH = () => Math.round(container.offset().top);
 
-            const contacts = [
-                { label: 'Phone', details: '+1 929 784-9752', detailsHtml: '<a href="tel:+19297849752" class="contact-link">+1 929 784-9752</a>' },
-                { label: 'Email', details: 'zakhargalanin@gmail.com', detailsHtml: '<a href="mailto:zakhargalanin@gmail.com" class="contact-link">zakhargalanin@gmail.com</a>' },
-                { label: 'Location', details: 'New York', detailsHtml: 'New York' },
-                { label: 'GitHub', details: 'www.github.com/galaninz', detailsHtml: '<a href="https://www.github.com/galaninz" class="contact-link" target="_blank">www.github.com/galaninz</a>' }
-            ];
+  function place(sq, x, y) {
+    const d = DOT() / 2;
+    sq.css('transform', `translate(${x - d + .5}px, ${y - d + .5}px)`).data({ x, y });
+  }
 
-            const myProjects = [
-                { label: 'CAD-to-BIM Services', details: 'CAD-to-BIM, Scan-to-BIM, existing conditions modeling, and BIM support for renovation, coordination, and preconstruction.', detailsHtml: '<a href="services.html" class="contact-link" target="_blank">CAD-to-BIM, Scan-to-BIM</a>, existing conditions modeling, and BIM support for renovation, coordination, and preconstruction.' },
-                { label: 'SKÅDIS Generator', details: 'Interactive 3D tool for designing custom IKEA SKÅDIS pegboard accessories. Built with Three.js — supports containers, hooks, and hangers with real-time preview and STL export for 3D printing.', detailsHtml: '<a href="skadisgenerator.html" class="contact-link" target="_blank">Interactive 3D tool</a> for designing custom IKEA SKÅDIS pegboard accessories. Built with Three.js — supports containers, hooks, and hangers with real-time preview and STL export for 3D printing.' },
-                { label: 'GEKON Attendance', details: 'React Native mobile app for construction crew time tracking. GPS geofencing, OSHA card verification, photo documentation on clock-out, bilingual (EN/ES), Google Sheets backend via Apps Script.', detailsHtml: 'React Native mobile app for construction crew time tracking. GPS geofencing, OSHA card verification, photo documentation on clock-out, bilingual (EN/ES), Google Sheets backend via Apps Script. <a href="privacy-gekon-attendance.html" class="contact-link" target="_blank">Privacy Policy</a>' }
-            ];
+  function bounds() {
+    const g = G(), top = firstY();
+    const cols = Math.max(Math.floor($(window).width() / g), 2);
+    const rows = Math.max(Math.floor(($(window).height() - headerH() - top) / g), 1);
+    return { g, top, cols, rows, maxX: (cols - 1) * g, maxY: top + (rows - 1) * g };
+  }
 
+  function randomCell() {
+    const b = bounds();
+    let x, y, n = 0;
+    do {
+      x = Math.floor(Math.random() * b.cols) * b.g;
+      y = b.top + Math.floor(Math.random() * b.rows) * b.g;
+      n++;
+    } while (occupied.has(x + '_' + y) && n < b.cols * b.rows);
+    occupied.add(x + '_' + y);
+    return { x, y };
+  }
 
-            function addRandomSquare(item, index, type) {
-                gridSize = getGridSize();
-                squareSize = getSquareSize();
-                
-                const containerWidth = $(window).width();
-                const containerHeight = $(window).height();
-                const headerHeight = $(window).width() <= 600 ? 40 : $(window).width() <= 800 ? 60 : 80;
-                const gridOffset = $(window).width() <= 800 ? 20 : 0;
-                const reservedRows = Math.ceil(headerHeight / gridSize) + 1;
-                const firstGridY = reservedRows * gridSize + gridOffset;
-                
-                const cols = Math.floor(containerWidth / gridSize);
-                const maxRows = Math.floor((containerHeight - firstGridY) / gridSize);
-                const maxAttempts = cols * maxRows;
-                
-                let randomX, randomY, attempts = 0;
-                do {
-                    randomX = Math.floor(Math.random() * cols) * gridSize;
-                    const randomRow = Math.floor(Math.random() * maxRows);
-                    randomY = firstGridY + randomRow * gridSize;
-                    attempts++;
-                } while (occupiedPositions.has(`${randomX}_${randomY}`) && attempts < maxAttempts);
-                
-                occupiedPositions.add(`${randomX}_${randomY}`);
+  /* ---------- floating movement ---------- */
+  function wander(sq, run) {
+    if (S.sorted || run !== S.run) return;
+    const b = bounds();
+    const dirs = [[0,-1],[1,0],[0,1],[-1,0]];
+    let [dx, dy] = dirs[Math.floor(Math.random() * 4)];
+    const dist = (2 + Math.floor(Math.random() * 3)) * b.g;
 
-                const squareContainer = $('<div></div>').addClass('item-link').css({
-                    transform: `translate(${randomX - squareSize / 2 + 0.5}px, ${randomY - squareSize / 2 + 0.5}px)`
-                });
+    let x = sq.data('x') + dx * dist, y = sq.data('y') + dy * dist;
+    // bounce off the wall instead of getting stuck on it (keeps full step size)
+    if (x < 0 || x > b.maxX || y < b.top || y > b.maxY) {
+      x = sq.data('x') - dx * dist;
+      y = sq.data('y') - dy * dist;
+    }
+    x = Math.min(Math.max(x, 0), b.maxX);
+    y = Math.min(Math.max(y, b.top), b.maxY);
 
-                const square = $('<div></div>').addClass('square');
-                
-                let floatingText, detailsText, detailsHtml, isHtml = false;
-                if (type === 'project') {
-                    floatingText = `${item.name} (${item.year})`;
-                    detailsText = item.details;
-                    detailsHtml = item.details;
-                } else {
-                    floatingText = item.label;
-                    detailsText = item.details;
-                    detailsHtml = item.detailsHtml;
-                }
+    const dur = dist * 2.5;
+    sq.css('transition', `transform ${dur}ms linear`);
+    place(sq, x, y);
+    sq.data('timer', setTimeout(() => wander(sq, run), dur + 800));
+  }
 
-                const itemText = $('<div></div>').addClass('item-text');
-                if (isHtml) {
-                    itemText.html(floatingText);
-                } else {
-                    itemText.text(floatingText);
-                }
-                const itemDetails = $('<div></div>').addClass('item-details')
-                    .data('plain', detailsText)
-                    .data('fullHtml', detailsHtml)
-                    .text(detailsText);
+  /* ---------- grid-only movement to a sorted position ---------- */
+  function step(sq, tx, ty, run, done) {
+    if (run !== S.run) return;
+    const g = G();
+    let x = sq.data('x'), y = sq.data('y');
+    if (x === tx && y === ty) { if (done) done(); return; }
+    if (x !== tx) x += Math.sign(tx - x) * Math.min(g, Math.abs(tx - x));
+    else          y += Math.sign(ty - y) * Math.min(g, Math.abs(ty - y));
+    const dur = g * 2.5;
+    sq.css('transition', `transform ${dur}ms linear`);
+    place(sq, x, y);
+    sq.data('timer', setTimeout(() => step(sq, tx, ty, run, done), dur));
+  }
 
-                squareContainer.append(square, itemText, itemDetails).appendTo(container);
+  /* ---------- typing ---------- */
+  function type(el, plain, html, run) {
+    let i = 0;
+    el.text('');
+    (function tick() {
+      if (run !== S.run) return;
+      if (i < plain.length) { el.append(plain.charAt(i++)); setTimeout(tick, 12); }
+      else el.html(html);
+    })();
+  }
 
-                if (type === 'project') projectSquares.push(squareContainer);
-                else if (type === 'myproject') myProjectSquares.push(squareContainer);
-                else if (type === 'skill') skillSquares.push(squareContainer);
-                else if (type === 'contact') contactSquares.push(squareContainer);
+  // real rendered height of one entry, so rows never overlap
+  function measure(sq) {
+    const det = sq.find('.item-details');
+    det.html(det.data('html')).css({ display: 'block', visibility: 'hidden' });
+    const h = det.position().top + det.outerHeight();
+    det.css({ display: '', visibility: '' }).text(det.data('plain'));
+    return h;
+  }
 
-                squareContainer.data('currentX', randomX).data('currentY', randomY);
-                moveSquare(squareContainer, randomX, randomY);
-            }
+  // one shared description size, as large as possible, so every entry fits ONE grid cell
+  function shrinkToOneCell(lists, g) {
+    const base = cssNum('--detail-size') || 12, min = 8;
+    const items = lists.flat();
+    for (let size = base; size >= min; size--) {
+      $('.item-details').css('font-size', size + 'px');
+      if (items.every(sq => measure(sq) <= g - 6)) return size;
+    }
+    return min;
+  }
 
-            function moveSquare(square, currentX, currentY) {
-                if (sortMode) {
-                    clearTimeout(square.data('moveTimeout'));
-                    clearTimeout(square.data('delayTimeout'));
-                    return;
-                }
+  /* ---------- build ---------- */
+  function createItem(item, type) {
+    const label = item.name ? `${item.name} (${item.year})` : item.label;
+    const sq = $('<div class="item-link"></div>');
+    $('<div class="square"></div>').appendTo(sq);
+    $('<div class="item-text"></div>').text(label).appendTo(sq);
+    $('<div class="item-details"></div>')
+      .data({ plain: item.details, html: item.detailsHtml || item.details })
+      .text(item.details).appendTo(sq);
 
-                gridSize = getGridSize();
-                const directions = [
-                    { x: 0, y: -1 }, { x: 1, y: 0 }, { x: 0, y: 1 }, { x: -1, y: 0 }
-                ];
-                
-                // Calculate boundaries based on full grid cells only
-                const containerWidth = $(window).width();
-                const containerHeight = $(window).height();
-                const headerHeight = $(window).width() <= 600 ? 40 : $(window).width() <= 800 ? 60 : 80;
-                const gridOffset = $(window).width() <= 800 ? 20 : 0;
-                
-                const maxCols = Math.floor(containerWidth / gridSize);
-                const maxX = (maxCols - 1) * gridSize;
-                
-                const firstGridY = (Math.ceil(headerHeight / gridSize) + 1) * gridSize + gridOffset;
-                const availableHeight = containerHeight - firstGridY;
-                const maxRows = Math.floor(availableHeight / gridSize);
-                const maxY = firstGridY + (maxRows - 1) * gridSize;
-                
-                // Always move at least 2-3 steps to avoid stopping at same intersection
-                const step = Math.floor(Math.random() * 3) + 2;
-                const distance = step * gridSize;
-                const duration = distance * 2.5;
+    const c = randomCell();
+    place(sq, c.x, c.y);
+    sq.appendTo(container);
+    groups[type].push(sq);
+    wander(sq, S.run);
+  }
 
-                const direction = directions[Math.floor(Math.random() * directions.length)];
-                let newX = currentX + direction.x * distance;
-                let newY = currentY + direction.y * distance;
+  function build() {
+    occupied.clear();
+    Object.keys(groups).forEach(k => { groups[k].forEach(s => s.remove()); groups[k].length = 0; });
+    projects.forEach(i => createItem(i, 'project'));
+    myProjects.forEach(i => createItem(i, 'myproject'));
+    skills.forEach(i => createItem(i, 'skill'));
+    contacts.forEach(i => createItem(i, 'contact'));
+  }
 
-                // Clamp to boundaries (only full grid cells)
-                newX = Math.max(0, Math.min(newX, maxX));
-                newY = Math.max(firstGridY, Math.min(newY, maxY));
+  function fitBody() {
+    const g = G();
+    const h = Math.floor($(window).height() / g) * g;   // only complete cells
+    $body.css({ minHeight: h + 'px', height: S.sorted ? 'auto' : h + 'px' });
+  }
 
-                square.css({
-                    transition: `transform ${duration}ms linear`,
-                    transform: `translate(${newX - squareSize / 2 + 0.5}px, ${newY - squareSize / 2 + 0.5}px)`
-                }).data('currentX', newX).data('currentY', newY);
+  function stopAll() { all().forEach(sq => { clearTimeout(sq.data('timer')); sq.stop(true, false); }); }
 
-                const moveTimeout = setTimeout(() => {
-                    if (!sortMode) {
-                        const delayTimeout = setTimeout(() => moveSquare(square, newX, newY), 800);
-                        square.data('delayTimeout', delayTimeout);
-                    }
-                }, duration);
-                square.data('moveTimeout', moveTimeout);
-            }
+  /* ---------- SORT ---------- */
+  function sort() {
+    S.sorted = true; S.run++;
+    const run = S.run;
+    stopAll();
 
-            function moveToTargetAlongGrid(square, currentX, currentY, targetX, targetY, callback) {
-                if (currentX === targetX && currentY === targetY) {
-                    if (callback) callback();
-                    return;
-                }
+    const g = G(), w = $(window).width();
+    const units = Math.max(Math.floor(w / g), 3);
+    const cols  = w >= 1200 ? 4 : w >= 800 ? 2 : 1;
+    const avail = Math.max(units - 2, 2);
 
-                gridSize = getGridSize();
-                let nextX = currentX;
-                let nextY = currentY;
+    let u;
+    if (cols === 4) {
+      const a = Math.max(Math.round(avail * .34), 2);
+      const b = Math.max(Math.round(avail * .30), 2);
+      const c = Math.max(Math.round(avail * .18), 2);
+      u = [a, b, c, Math.max(avail - a - b - c, 2)];
+    } else if (cols === 2) {
+      const second = Math.min(6, Math.max(Math.round(avail * .38), 3));
+      u = [Math.max(avail - second, 3), second];
+    } else {
+      u = [avail];
+    }
 
-                // Move along grid: first complete X movement, then Y movement
-                if (currentX !== targetX) {
-                    nextX = currentX + Math.sign(targetX - currentX) * gridSize;
-                } else if (currentY !== targetY) {
-                    nextY = currentY + Math.sign(targetY - currentY) * gridSize;
-                }
+    const xs = []; let acc = g;
+    u.forEach(n => { xs.push(acc); acc += n * g; });
+    const colW = u.map(n => n * g - g / 2);
 
-                const duration = gridSize * 2.5;
+    const lists = cols === 4
+      ? [groups.project, groups.myproject, groups.skill, groups.contact]
+      : cols === 2
+        ? [[...groups.project, ...groups.myproject], [...groups.contact, ...groups.skill]]
+        : [[...groups.project, ...groups.myproject, ...groups.contact, ...groups.skill]];
 
-                square.css({
-                    transition: `transform ${duration}ms linear`,
-                    transform: `translate(${nextX - squareSize / 2 + 0.5}px, ${nextY - squareSize / 2 + 0.5}px)`
-                }).data('currentX', nextX).data('currentY', nextY);
+    const top = firstY();
+    let bottom = top;
 
-                setTimeout(() => {
-                    moveToTargetAlongGrid(square, nextX, nextY, targetX, targetY, callback);
-                }, duration);
-            }
+    // pass 1 — column widths, details go right under the title
+    lists.forEach((list, ci) => list.forEach(sq => {
+      const txt = sq.find('.item-text').addClass('sorted')
+        .css({ width: colW[ci] + 'px', maxWidth: colW[ci] + 'px', whiteSpace: 'normal' });
+      sq.find('.item-details').css({
+        width: colW[ci] + 'px', maxWidth: colW[ci] + 'px',
+        fontSize: '', top: (txt.outerHeight() + 3) + 'px'
+      });
+    }));
 
-            function typeWriterEffect(element, text, fullHtml) {
-                let index = 0;
-                element.text('');
-                function type() {
-                    if (index < text.length) {
-                        element.append(text.charAt(index));
-                        index++;
-                        setTimeout(type, 30);
-                    } else if (fullHtml) {
-                        element.html(fullHtml);
-                    }
-                }
-                type();
-            }
+    // pass 2 — fit the descriptions into a single cell
+    shrinkToOneCell(lists, g);
 
-            function sortProjects() {
-                sortMode = true;
-                gridSize = getGridSize();
-                squareSize = getSquareSize();
-                
-                [...projectSquares, ...myProjectSquares, ...skillSquares, ...contactSquares].forEach(square => {
-                    clearTimeout(square.data('moveTimeout'));
-                    clearTimeout(square.data('delayTimeout'));
-                    square.stop(true, false);
-                });
-
-                const containerWidth = $(window).width();
-                const units = Math.floor(containerWidth / gridSize);
-                let columns = containerWidth >= 1200 ? 4 : containerWidth >= 800 ? 2 : 1;
-
-                let xPositions = [], colWidths = [];
-                if (columns === 4) {
-                    const available = units - 1;
-                    const col1 = Math.round(available * 0.33);
-                    const col2 = Math.round(available * 0.33);
-                    const col3 = Math.round(available * 0.16);
-                    const col4 = Math.max(available - col1 - col2 - col3, 1);
-                    xPositions = [
-                        gridSize,
-                        gridSize + col1 * gridSize,
-                        gridSize + (col1 + col2) * gridSize,
-                        gridSize + (col1 + col2 + col3) * gridSize
-                    ];
-                    colWidths = [
-                        col1 * gridSize - gridSize / 2,
-                        col2 * gridSize - gridSize / 2,
-                        col3 * gridSize - gridSize / 2,
-                        col4 * gridSize - gridSize / 2
-                    ];
-                } else if (columns === 2) {
-                    const secondUnits = Math.min(5, Math.max(units - 2, 1));
-                    const firstUnits = Math.max(units - 1 - secondUnits, 1);
-                    xPositions = [gridSize, gridSize + firstUnits * gridSize];
-                    colWidths = [firstUnits * gridSize - gridSize / 2, secondUnits * gridSize - gridSize / 2];
-                } else {
-                    const singleUnits = Math.max(units - 1, 1);
-                    xPositions = [gridSize];
-                    colWidths = [singleUnits * gridSize - gridSize / 2];
-                }
-
-                const columnItems = columns === 1 ? [[...projectSquares, ...myProjectSquares, ...contactSquares, ...skillSquares]] :
-                                    columns === 2 ? [[...projectSquares, ...myProjectSquares], [...contactSquares, ...skillSquares]] :
-                                    [[...projectSquares], [...myProjectSquares], [...skillSquares], [...contactSquares]];
-
-                const maxRows = Math.max(...columnItems.map(list => list.length));
-                const headerHeight = $(window).width() <= 600 ? 40 : $(window).width() <= 800 ? 60 : 80;
-                const gridOffset = $(window).width() <= 800 ? 20 : 0;
-                const firstRowY = Math.ceil(headerHeight / gridSize) * gridSize + gridOffset;
-                const totalHeight = firstRowY + (maxRows + 2) * gridSize;
-                container.css('height', totalHeight + 'px');
-                
-                // Ensure body covers all content with complete grid cells
-                const fullCells = Math.ceil(totalHeight / gridSize);
-                const bodyHeight = fullCells * gridSize;
-                $('body').css({
-                    'min-height': bodyHeight + 'px',
-                    'height': 'auto'
-                });
-
-                columnItems.forEach((list, colIndex) => {
-                    list.forEach((square, rowIndex) => {
-                        const targetX = xPositions[colIndex];
-                        const targetY = firstRowY + rowIndex * gridSize;
-                        const currentX = square.data('currentX');
-                        const currentY = square.data('currentY');
-
-                        square.find('.item-details, .item-text').css({
-                            'max-width': colWidths[colIndex] + 'px',
-                            'width': colWidths[colIndex] + 'px',
-                            'white-space': 'normal',
-                            'word-wrap': 'break-word',
-                            'overflow-wrap': 'break-word'
-                        });
-
-                        square.find('.item-text').addClass('sorted');
-
-                        moveToTargetAlongGrid(square, currentX, currentY, targetX, targetY, () => {
-                            const details = square.find('.item-details');
-                            if (!details.hasClass('show-details')) {
-                                details.addClass('show-details');
-                                typeWriterEffect(details, details.data('plain'), details.data('fullHtml'));
-                            }
-                        });
-                    });
-                });
-
-                $('.item-text').css('white-space', 'normal');
-            }
-
-            function unsortProjects() {
-                sortMode = false;
-                gridSize = getGridSize();
-                squareSize = getSquareSize();
-                occupiedPositions.clear();
-                container.css('height', '');
-                
-                // Reset body height to viewport grid cells when unsorted
-                setBodyHeight();
-
-                [...projectSquares, ...myProjectSquares, ...skillSquares, ...contactSquares].forEach(square => {
-                    clearTimeout(square.data('moveTimeout'));
-                    clearTimeout(square.data('delayTimeout'));
-                    square.stop(true, false);
-
-                    const containerWidth = Math.floor($(window).width() / gridSize) * gridSize;
-                    const containerHeight = Math.floor($(window).height() / gridSize) * gridSize;
-                    const cols = Math.floor(containerWidth / gridSize);
-                    const headerHeight = $(window).width() <= 600 ? 40 : $(window).width() <= 800 ? 60 : 80;
-                    const gridOffset = $(window).width() <= 800 ? 20 : 0;
-                    const firstGridY = (Math.ceil(headerHeight / gridSize) + 1) * gridSize + gridOffset;
-                    const maxRows = Math.floor((containerHeight - firstGridY) / gridSize);
-                    
-                    let rx, ry, tries = 0;
-                    do {
-                        rx = Math.floor(Math.random() * cols) * gridSize;
-                        ry = firstGridY + Math.floor(Math.random() * maxRows) * gridSize;
-                        tries++;
-                    } while (occupiedPositions.has(`${rx}_${ry}`) && tries < cols * maxRows);
-                    
-                    occupiedPositions.add(`${rx}_${ry}`);
-
-                    square.find('.item-details').removeClass('show-details').text(square.find('.item-details').data('plain'));
-                    square.find('.item-text').removeClass('sorted');
-
-                    square.fadeOut(500, function() {
-                        square.css({ transform: `translate(${rx - squareSize / 2 + 0.5}px, ${ry - squareSize / 2 + 0.5}px)` });
-                        square.data('currentX', rx).data('currentY', ry);
-                        square.fadeIn(500, function() {
-                            moveSquare(square, rx, ry);
-                        });
-                    });
-                });
-
-                $('.item-text, .item-details').css({ 
-                    'white-space': 'nowrap', 
-                    'width': '', 
-                    'max-width': '',
-                    'word-wrap': '',
-                    'overflow-wrap': ''
-                });
-            }
-
-            projects.forEach((p, i) => addRandomSquare(p, i, 'project'));
-            myProjects.forEach((p, i) => addRandomSquare(p, i, 'myproject'));
-            skills.forEach((s, i) => addRandomSquare(s, i, 'skill'));
-            contacts.forEach((c, i) => addRandomSquare(c, i, 'contact'));
-
-            $('.sort-button').on('click', function() {
-                if (sortMode) {
-                    unsortProjects();
-                    $(this).removeClass('sorted').text('SORT');
-                } else {
-                    sortProjects();
-                    $(this).addClass('sorted').text('UNSORT');
-                }
-            });
-
-            // Auto-sort if ?sorted=true in URL
-            if (new URLSearchParams(window.location.search).get('sorted') === 'true') {
-                setTimeout(() => {
-                    sortProjects();
-                    $('.sort-button').addClass('sorted').text('UNSORT');
-                }, 300);
-            }
-
-            const modal = $('#certificateModal');
-            $(document).on('click', '.certificate-link', function() {
-                $('#certificateImage').attr('src', $(this).data('img'));
-                modal.show();
-            });
-
-            $(window).on('click', function(e) {
-                if ($(e.target).is(modal) || $(e.target).is('.close')) {
-                    modal.hide();
-                }
-            });
-
-            let lastWidth = $(window).width();
-            $(window).resize(function() {
-                const newWidth = $(window).width();
-                if (newWidth === lastWidth) return;
-                lastWidth = newWidth;
-                
-                const wasSorted = sortMode;
-                if (wasSorted) sortMode = false;
-                
-                setBodyHeight();
-                occupiedPositions.clear();
-                [...projectSquares, ...myProjectSquares, ...skillSquares, ...contactSquares].forEach(s => s.remove());
-                projectSquares.length = myProjectSquares.length = skillSquares.length = contactSquares.length = 0;
-                projects.forEach((p, i) => addRandomSquare(p, i, 'project'));
-                myProjects.forEach((p, i) => addRandomSquare(p, i, 'myproject'));
-                skills.forEach((s, i) => addRandomSquare(s, i, 'skill'));
-                contacts.forEach((c, i) => addRandomSquare(c, i, 'contact'));
-                
-                if (wasSorted) sortProjects();
-            });
+    // pass 3 — place
+    lists.forEach((list, ci) => {
+      let y = top;
+      list.forEach(sq => {
+        const cell = Math.max(Math.ceil(measure(sq) / g) * g, g);
+        step(sq, xs[ci], y, run, () => {
+          const d = sq.find('.item-details');
+          if (!d.hasClass('show-details')) { d.addClass('show-details'); type(d, d.data('plain'), d.data('html'), run); }
         });
-    </script>
+        y += cell;
+      });
+      bottom = Math.max(bottom, y);
+    });
+
+    const total = bottom + g;
+    container.css('height', total + 'px');
+    $body.css({ height: 'auto', minHeight: Math.ceil((total + headerH()) / g) * g + 'px' });
+  }
+
+  /* ---------- UNSORT ---------- */
+  function unsort() {
+    S.sorted = false; S.run++;
+    const run = S.run;
+    stopAll();
+    occupied.clear();
+    container.css('height', '');
+    fitBody();
+
+    all().forEach(sq => {
+      const det = sq.find('.item-details');
+      det.removeClass('show-details').removeAttr('style').text(det.data('plain'));
+      sq.find('.item-text').removeClass('sorted').removeAttr('style');
+
+      const c = randomCell();
+      sq.fadeOut(400, function () {
+        sq.css('transition', 'none');
+        place(sq, c.x, c.y);
+        sq.fadeIn(400, function () {
+          sq.css('transition', '');
+          wander(sq, run);
+        });
+      });
+    });
+  }
+
+  /* ---------- init ---------- */
+  fitBody();
+  build();
+
+  $('.sort-button').on('click', function () {
+    if (S.sorted) { unsort(); $(this).removeClass('sorted').text('SORT'); }
+    else          { sort();   $(this).addClass('sorted').text('UNSORT'); }
+  });
+
+  if (new URLSearchParams(location.search).get('sorted') === 'true') {
+    setTimeout(() => { sort(); $('.sort-button').addClass('sorted').text('UNSORT'); }, 300);
+  }
+
+  $(document).on('click', '.certificate-link', function () {
+    $('#certificateImage').attr('src', $(this).data('img'));
+    modal.show();
+  });
+  modal.on('click', e => { if (e.target === modal[0] || $(e.target).is('.close')) modal.hide(); });
+  $(document).on('keyup', e => { if (e.key === 'Escape') modal.hide(); });
+
+  // debounced resize, keeps the current mode
+  let lastW = $(window).width(), rt;
+  $(window).on('resize', function () {
+    const w = $(window).width();
+    if (w === lastW) return;
+    lastW = w;
+    clearTimeout(rt);
+    rt = setTimeout(function () {
+      const wasSorted = S.sorted;
+      S.sorted = false; S.run++;
+      fitBody();
+      build();
+      if (wasSorted) sort();
+    }, 150);
+  });
+});
+</script>
 </body>
 </html>
