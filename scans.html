@@ -237,6 +237,9 @@ import { mergeVertices } from 'three/addons/utils/BufferGeometryUtils.js';
    restored  : a second model; the As found / Restored toggle then
                appears on its own
    rotation  : [x, y, z] degrees, if the scan arrives lying on its side
+   gridCells : how many grid cells run across the object — default 8
+   keepTexture: true keeps an .obj or .glb's own texture instead of
+               wrapping the model in the site grid
    scaleHint : real height of the object in inches — switches on the
                size readout under the viewer
    hotspots  : { label, x, y, z } in model units, measured from centre
@@ -248,7 +251,8 @@ const CATALOG = [
     meta: 'Capture test · photogrammetry',
     found: 'scans/bust-01.stl',
     smooth: true,
-    // rotation: [-90, 0, 0],
+    rotation: [-90, 0, 0],
+    // gridCells: 8,
     // scaleHint: 14,
     caption: [
       'Photogrammetric capture used to prove the pipeline end to end: field photography, mesh reconstruction, cleanup, and delivery to the web.',
@@ -291,12 +295,6 @@ key.position.set(2, 3, 2); scene.add(key);
 const rim = new THREE.DirectionalLight(0xffa64d, 0.9);
 rim.position.set(-2.5, 1, -2); scene.add(rim);
 
-/* the page grid, continued into the scene */
-const floor = new THREE.GridHelper(6, 24, 0xffffff, 0xffffff);
-floor.material.transparent = true;
-floor.material.opacity = 0.16;
-scene.add(floor);
-
 const cache = new Map();
 let current = null, hotspotNodes = [], activeItem = null;
 
@@ -319,11 +317,42 @@ function fixMaterials(root) {
   });
 }
 
-function applyClay(root) {
-  const clay = new THREE.MeshStandardMaterial({
-    color: 0xe8e4dc, roughness: 0.88, metalness: 0, side: THREE.DoubleSide
+/* the page background, wrapped around the model itself:
+   a navy body with the same white grid lines, projected on all three
+   axes so they follow the form instead of a flat UV map */
+function makeGridMaterial(cell) {
+  const m = new THREE.MeshStandardMaterial({
+    color: 0x0d3160, roughness: 0.9, metalness: 0, side: THREE.DoubleSide
   });
-  root.traverse(o => { if (o.isMesh) o.material = clay; });
+  m.onBeforeCompile = shader => {
+    shader.uniforms.uCell = { value: cell };
+    shader.vertexShader = shader.vertexShader
+      .replace('#include <common>', '#include <common>\nvarying vec3 vObjPos;\nvarying vec3 vObjNrm;')
+      .replace('#include <begin_vertex>', '#include <begin_vertex>\nvObjPos = position;\nvObjNrm = normal;');
+    shader.fragmentShader = shader.fragmentShader
+      .replace('#include <common>', `#include <common>
+        varying vec3 vObjPos;
+        varying vec3 vObjNrm;
+        uniform float uCell;
+        float axisLine(float v) {
+          float s = v / uCell;
+          float d = abs(fract(s - 0.5) - 0.5) / max(fwidth(s), 1e-5);
+          return 1.0 - min(d, 1.0);
+        }`)
+      .replace('#include <dithering_fragment>', `#include <dithering_fragment>
+        vec3 w = normalize(abs(vObjNrm) + 1e-5);
+        float g = max(
+          max(axisLine(vObjPos.x) * (w.y + w.z), axisLine(vObjPos.y) * (w.x + w.z)),
+          axisLine(vObjPos.z) * (w.x + w.y)
+        );
+        gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(1.0), clamp(g, 0.0, 1.0) * 0.5);`);
+  };
+  return m;
+}
+
+function applyGrid(root, cell) {
+  const m = makeGridMaterial(cell);
+  root.traverse(o => { if (o.isMesh) o.material = m; });
 }
 
 async function loadFile(url, item) {
@@ -341,7 +370,6 @@ async function loadFile(url, item) {
     else if (!geo.attributes.normal) geo.computeVertexNormals();
     const root = new THREE.Group();
     root.add(new THREE.Mesh(geo, new THREE.MeshStandardMaterial()));
-    applyClay(root);
     return root;
   }
 
@@ -355,7 +383,6 @@ async function loadFile(url, item) {
     objLoader.setMaterials(materials);
   }
   const obj = await objLoader.loadAsync(url);
-  if (!mtlUrl) applyClay(obj);
   fixMaterials(obj);
   return obj;
 }
@@ -366,7 +393,8 @@ function clearModel() {
   current = null;
 }
 
-function frame(model, rotation) {
+function frame(model, item) {
+  const rotation = item.rotation;
   if (rotation) {
     const d = Math.PI / 180;
     model.rotation.set(rotation[0] * d, rotation[1] * d, rotation[2] * d);
@@ -377,14 +405,15 @@ function frame(model, rotation) {
   const center = box.getCenter(new THREE.Vector3());
   const span = Math.max(size.x, size.y, size.z) || 1;
 
+  if (!item.keepTexture) applyGrid(model, span / (item.gridCells || 8));
+
   const holder = new THREE.Group();
   model.position.sub(center);
   holder.add(model);
   holder.scale.setScalar(1 / span);
-  holder.position.y = 0.5;
 
-  controls.target.set(0, 0.5, 0);
-  camera.position.set(1.1, 0.95, 1.5);
+  controls.target.set(0, 0, 0);
+  camera.position.set(0.9, 0.5, 1.5);
   controls.update();
   return { holder, size };
 }
@@ -433,7 +462,7 @@ async function load(item, variant = 'found') {
   try {
     let source = cache.get(url);
     if (!source) { source = await loadFile(url, item); cache.set(url, source); }
-    const { holder, size } = frame(source.clone(true), item.rotation);
+    const { holder, size } = frame(source.clone(true), item);
     scene.add(holder);
     current = holder;
     showDimensions(size, item.scaleHint);
