@@ -106,27 +106,10 @@
     position: relative; width: 100%;
     height: calc(var(--grid-size) * 6);
     min-height: 340px;
-    border: 1px solid var(--line);
     overflow: hidden; touch-action: none;
   }
   @media (min-width: 1200px) { .canvas-wrap { height: calc(var(--grid-size) * 7); } }
   canvas { display: block; width: 100%; height: 100%; }
-
-  /* the site grid continues over the model */
-  .grid-overlay {
-    position: absolute; inset: 0; pointer-events: none;
-    background-image:
-      linear-gradient(to right, var(--line) 1px, transparent 1px),
-      linear-gradient(to bottom, var(--line) 1px, transparent 1px);
-    background-size: var(--grid-size) var(--grid-size);
-    opacity: .5;
-  }
-  .corner {
-    position: absolute; width: var(--dot-size); height: var(--dot-size);
-    background: var(--accent); pointer-events: none;
-  }
-  .corner.tl { left: -1px; top: -1px; }
-  .corner.br { right: -1px; bottom: -1px; }
 
   .status {
     position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
@@ -196,8 +179,6 @@
     <section class="stage">
       <h2 class="panel-title" id="title">—</h2>
       <div class="canvas-wrap" id="wrap">
-        <span class="corner tl"></span><span class="corner br"></span>
-        <div class="grid-overlay"></div>
         <div class="status" id="status">Select an element</div>
       </div>
 
@@ -237,9 +218,9 @@ import { mergeVertices } from 'three/addons/utils/BufferGeometryUtils.js';
    restored  : a second model; the As found / Restored toggle then
                appears on its own
    rotation  : [x, y, z] degrees, if the scan arrives lying on its side
-   gridCells : how many grid cells run across the object — default 8
-   keepTexture: true keeps an .obj or .glb's own texture instead of
-               wrapping the model in the site grid
+   gridCells : how many grid cells run across the object — default 40
+   keepTexture: true keeps an .obj or .glb's own texture and lighting
+               instead of wrapping the model in the site grid
    scaleHint : real height of the object in inches — switches on the
                size readout under the viewer
    hotspots  : { label, x, y, z } in model units, measured from centre
@@ -252,7 +233,7 @@ const CATALOG = [
     found: 'scans/bust-01.stl',
     smooth: true,
     rotation: [-90, 0, 0],
-    // gridCells: 8,
+    gridCells: 40,
     // scaleHint: 14,
     caption: [
       'Photogrammetric capture used to prove the pipeline end to end: field photography, mesh reconstruction, cleanup, and delivery to the web.',
@@ -317,22 +298,19 @@ function fixMaterials(root) {
   });
 }
 
-/* the page background, wrapped around the model itself:
-   a navy body with the same white grid lines, projected on all three
-   axes so they follow the form instead of a flat UV map */
+/* the page background, wrapped around the model itself: the body is the
+   exact page navy and takes no light, so the form is described purely by
+   grid lines bending over its surface */
 function makeGridMaterial(cell) {
-  const m = new THREE.MeshStandardMaterial({
-    color: 0x0d3160, roughness: 0.9, metalness: 0, side: THREE.DoubleSide
-  });
+  const m = new THREE.MeshBasicMaterial({ color: 0x001f3f, side: THREE.DoubleSide });
   m.onBeforeCompile = shader => {
     shader.uniforms.uCell = { value: cell };
     shader.vertexShader = shader.vertexShader
-      .replace('#include <common>', '#include <common>\nvarying vec3 vObjPos;\nvarying vec3 vObjNrm;')
-      .replace('#include <begin_vertex>', '#include <begin_vertex>\nvObjPos = position;\nvObjNrm = normal;');
+      .replace('#include <common>', '#include <common>\nvarying vec3 vObjPos;')
+      .replace('#include <begin_vertex>', '#include <begin_vertex>\nvObjPos = position;');
     shader.fragmentShader = shader.fragmentShader
       .replace('#include <common>', `#include <common>
         varying vec3 vObjPos;
-        varying vec3 vObjNrm;
         uniform float uCell;
         float axisLine(float v) {
           float s = v / uCell;
@@ -340,12 +318,13 @@ function makeGridMaterial(cell) {
           return 1.0 - min(d, 1.0);
         }`)
       .replace('#include <dithering_fragment>', `#include <dithering_fragment>
-        vec3 w = normalize(abs(vObjNrm) + 1e-5);
-        float g = max(
-          max(axisLine(vObjPos.x) * (w.y + w.z), axisLine(vObjPos.y) * (w.x + w.z)),
-          axisLine(vObjPos.z) * (w.x + w.y)
-        );
-        gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(1.0), clamp(g, 0.0, 1.0) * 0.5);`);
+        vec3 fn = normalize(cross(dFdx(vObjPos), dFdy(vObjPos)));
+        vec3 w = abs(fn);
+        w /= (w.x + w.y + w.z + 1e-5);
+        float g = axisLine(vObjPos.x) * (1.0 - w.x)
+                + axisLine(vObjPos.y) * (1.0 - w.y)
+                + axisLine(vObjPos.z) * (1.0 - w.z);
+        gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(1.0), clamp(g, 0.0, 1.0) * 0.45);`);
   };
   return m;
 }
@@ -405,7 +384,7 @@ function frame(model, item) {
   const center = box.getCenter(new THREE.Vector3());
   const span = Math.max(size.x, size.y, size.z) || 1;
 
-  if (!item.keepTexture) applyGrid(model, span / (item.gridCells || 8));
+  if (!item.keepTexture) applyGrid(model, span / (item.gridCells || 40));
 
   const holder = new THREE.Group();
   model.position.sub(center);
