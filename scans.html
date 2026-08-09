@@ -218,7 +218,7 @@ import { mergeVertices } from 'three/addons/utils/BufferGeometryUtils.js';
    restored  : a second model; the As found / Restored toggle then
                appears on its own
    rotation  : [x, y, z] degrees, if the scan arrives lying on its side
-   gridCells : how many grid cells run across the object — default 40
+   gridCells : how many grid cells run across the object — default 80
    keepTexture: true keeps an .obj or .glb's own texture and lighting
                instead of wrapping the model in the site grid
    scaleHint : real height of the object in inches — switches on the
@@ -233,7 +233,7 @@ const CATALOG = [
     found: 'scans/bust-01.stl',
     smooth: true,
     rotation: [-90, 0, 0],
-    gridCells: 40,
+    gridCells: 80,
     // scaleHint: 14,
     caption: [
       'Photogrammetric capture used to prove the pipeline end to end: field photography, mesh reconstruction, cleanup, and delivery to the web.',
@@ -384,7 +384,7 @@ function frame(model, item) {
   const center = box.getCenter(new THREE.Vector3());
   const span = Math.max(size.x, size.y, size.z) || 1;
 
-  if (!item.keepTexture) applyGrid(model, span / (item.gridCells || 40));
+  if (!item.keepTexture) applyGrid(model, span / (item.gridCells || 80));
 
   const holder = new THREE.Group();
   model.position.sub(center);
