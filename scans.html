@@ -186,8 +186,8 @@
       <h2 class="index-title">Scan Library</h2>
       <div id="index"></div>
       <p class="note">
-        Each entry is a field scan of an existing architectural element, captured on site
-        and rebuilt as a measured 3D model. Viewer models are reduced for the web.
+        Each entry is a scan of an existing object, captured on site and rebuilt
+        as a measured 3D model. Viewer models are reduced for the web.
         Fabrication-grade files stay in the archive —
         <a href="mailto:zakhargalanin@gmail.com">request access</a>.
       </p>
@@ -222,30 +222,41 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
+import { MTLLoader } from 'three/addons/loaders/MTLLoader.js';
+import { STLLoader } from 'three/addons/loaders/STLLoader.js';
+import { mergeVertices } from 'three/addons/utils/BufferGeometryUtils.js';
 
 /* ------------------------------------------------------------------
-   CATALOG — add an entry per scan.
-   models live in /scans/ .  "restored" is optional: include it only
-   when a reconstructed version exists, and the toggle appears by itself.
+   CATALOG — one entry per scan. Files live in /scans/.
+   found     : .stl, .obj or .glb  (required)
+   smooth    : true welds the facets of an STL into a smooth surface;
+               leave it off to keep the raw faceted mesh
+   mtl       : only for .obj — the .mtl file sitting next to it.
+               .stl carries no texture and always renders as clay
+   restored  : a second model; the As found / Restored toggle then
+               appears on its own
+   rotation  : [x, y, z] degrees, if the scan arrives lying on its side
+   scaleHint : real height of the object in inches — switches on the
+               size readout under the viewer
+   hotspots  : { label, x, y, z } in model units, measured from centre
 ------------------------------------------------------------------ */
 const CATALOG = [
   {
-    id: 'newel-01',
-    title: 'Newel post finial',
-    meta: 'Sunset Park, Brooklyn · cast iron · c. 1900',
-    found: 'scans/newel-01-found.glb',
-    // restored: 'scans/newel-01-restored.glb',
+    id: 'bust-01',
+    title: 'Portrait bust',
+    meta: 'Capture test · photogrammetry',
+    found: 'scans/bust-01.stl',
+    smooth: true,
+    // rotation: [-90, 0, 0],
+    // scaleHint: 14,
     caption: [
-      'Photogrammetric capture from 118 frames, scaled against an on-site reference.',
-      'Surface loss concentrated on the weather side; the profile survives intact on the leeward half, which is enough to reconstruct the full section.'
+      'Photogrammetric capture used to prove the pipeline end to end: field photography, mesh reconstruction, cleanup, and delivery to the web.',
+      'The model shown here is decimated and its texture downsampled. The full-resolution mesh stays in the archive.'
     ],
-    hotspots: [
-      // { label: 'Section loss', x: 0.2, y: 0.6, z: 0.1 }
-    ]
+    hotspots: []
   }
 ];
-
-const ACCENT = 0xff851b, LINE = 0xffffff;
 
 const wrap = document.getElementById('wrap');
 const statusEl = document.getElementById('status');
@@ -281,12 +292,11 @@ const rim = new THREE.DirectionalLight(0xffa64d, 0.9);
 rim.position.set(-2.5, 1, -2); scene.add(rim);
 
 /* the page grid, continued into the scene */
-const floor = new THREE.GridHelper(6, 24, LINE, LINE);
+const floor = new THREE.GridHelper(6, 24, 0xffffff, 0xffffff);
 floor.material.transparent = true;
 floor.material.opacity = 0.16;
 scene.add(floor);
 
-const loader = new GLTFLoader();
 const cache = new Map();
 let current = null, hotspotNodes = [], activeItem = null;
 
@@ -295,39 +305,94 @@ function setStatus(html) {
   statusEl.classList.toggle('hidden', !html);
 }
 
+/* ---------- loading: format picked from the file extension ---------- */
+function fixMaterials(root) {
+  root.traverse(o => {
+    if (!o.isMesh) return;
+    if (!o.geometry.attributes.normal) o.geometry.computeVertexNormals();
+    const mats = Array.isArray(o.material) ? o.material : [o.material];
+    mats.forEach(m => {
+      if (!m) return;
+      if (m.map) m.map.colorSpace = THREE.SRGBColorSpace;
+      m.side = THREE.DoubleSide;
+    });
+  });
+}
+
+function applyClay(root) {
+  const clay = new THREE.MeshStandardMaterial({
+    color: 0xe8e4dc, roughness: 0.88, metalness: 0, side: THREE.DoubleSide
+  });
+  root.traverse(o => { if (o.isMesh) o.material = clay; });
+}
+
+async function loadFile(url, item) {
+  const ext = url.split('.').pop().toLowerCase();
+
+  if (ext === 'glb' || ext === 'gltf') {
+    const gltf = await new GLTFLoader().loadAsync(url);
+    fixMaterials(gltf.scene);
+    return gltf.scene;
+  }
+
+  if (ext === 'stl') {
+    let geo = await new STLLoader().loadAsync(url);
+    if (item.smooth) { geo = mergeVertices(geo); geo.computeVertexNormals(); }
+    else if (!geo.attributes.normal) geo.computeVertexNormals();
+    const root = new THREE.Group();
+    root.add(new THREE.Mesh(geo, new THREE.MeshStandardMaterial()));
+    applyClay(root);
+    return root;
+  }
+
+  const mtlUrl = item.mtl;
+  const objLoader = new OBJLoader();
+  if (mtlUrl) {
+    const mtlLoader = new MTLLoader();
+    mtlLoader.setResourcePath(mtlUrl.slice(0, mtlUrl.lastIndexOf('/') + 1));
+    const materials = await mtlLoader.loadAsync(mtlUrl);
+    materials.preload();
+    objLoader.setMaterials(materials);
+  }
+  const obj = await objLoader.loadAsync(url);
+  if (!mtlUrl) applyClay(obj);
+  fixMaterials(obj);
+  return obj;
+}
+
 function clearModel() {
   if (!current) return;
   scene.remove(current);
-  current.traverse(o => {
-    if (o.isMesh) {
-      o.geometry.dispose();
-      const mats = Array.isArray(o.material) ? o.material : [o.material];
-      mats.forEach(m => { if (m.map) m.map.dispose(); m.dispose(); });
-    }
-  });
   current = null;
 }
 
-function frame(model) {
+function frame(model, rotation) {
+  if (rotation) {
+    const d = Math.PI / 180;
+    model.rotation.set(rotation[0] * d, rotation[1] * d, rotation[2] * d);
+    model.updateMatrixWorld(true);
+  }
   const box = new THREE.Box3().setFromObject(model);
   const size = box.getSize(new THREE.Vector3());
   const center = box.getCenter(new THREE.Vector3());
   const span = Math.max(size.x, size.y, size.z) || 1;
 
-  model.scale.multiplyScalar(1 / span);
-  model.position.sub(center.multiplyScalar(1 / span));
-  model.position.y += 0.5;
+  const holder = new THREE.Group();
+  model.position.sub(center);
+  holder.add(model);
+  holder.scale.setScalar(1 / span);
+  holder.position.y = 0.5;
 
-  floor.position.y = 0;
   controls.target.set(0, 0.5, 0);
   camera.position.set(1.1, 0.95, 1.5);
   controls.update();
-  return size;
+  return { holder, size };
 }
 
-function showDimensions(size, scaleHint) {
-  if (!scaleHint) { readoutEl.innerHTML = ''; return; }
-  const f = v => (v * scaleHint).toFixed(1);
+function showDimensions(size, heightInches) {
+  if (!heightInches) { readoutEl.innerHTML = ''; return; }
+  const k = heightInches / size.y;
+  const f = v => (v * k).toFixed(1);
   readoutEl.innerHTML =
     `<span>Height <b>${f(size.y)}"</b></span>` +
     `<span>Width <b>${f(size.x)}"</b></span>` +
@@ -366,12 +431,11 @@ async function load(item, variant = 'found') {
   setStatus('Loading…');
 
   try {
-    let gltf = cache.get(url);
-    if (!gltf) { gltf = await loader.loadAsync(url); cache.set(url, gltf); }
-    const model = gltf.scene.clone(true);
-    const size = frame(model);
-    scene.add(model);
-    current = model;
+    let source = cache.get(url);
+    if (!source) { source = await loadFile(url, item); cache.set(url, source); }
+    const { holder, size } = frame(source.clone(true), item.rotation);
+    scene.add(holder);
+    current = holder;
     showDimensions(size, item.scaleHint);
     buildHotspots(item.hotspots);
     controls.autoRotate = !reduceMotion;
@@ -414,8 +478,7 @@ renderer.setAnimationLoop(() => {
     const w = wrap.clientWidth, h = wrap.clientHeight;
     hotspotNodes.forEach(({ el, v }) => {
       proj.copy(v).applyMatrix4(current.matrixWorld).project(camera);
-      const visible = proj.z < 1;
-      el.style.display = visible ? 'block' : 'none';
+      el.style.display = proj.z < 1 ? 'block' : 'none';
       el.style.left = ((proj.x * 0.5 + 0.5) * w) + 'px';
       el.style.top = ((-proj.y * 0.5 + 0.5) * h) + 'px';
     });
