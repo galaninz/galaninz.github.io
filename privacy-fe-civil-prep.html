@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy Policy – FE Civil Prep</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #001f3f;
+    --accent: #ff851b;
+    --accent-hover: #ffa64d;
+    --line: rgba(255,255,255,0.2);
+    --ink: rgba(255,255,255,0.85);
+    --grid: 80px;
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--bg); }
+  body {
+    margin: 0; padding: 0;
+    font-family: 'Orbitron', Arial, sans-serif;
+    color: #fff;
+    background-color: transparent;
+    background-image:
+      linear-gradient(to right, var(--line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+    background-size: var(--grid) var(--grid);
+    box-shadow: inset -1px -1px 0 0 var(--line);
+  }
+  .header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    padding: 0 40px; height: 80px;
+  }
+  .logo { font-size: 24px; font-weight: 700; color: #fff; text-decoration: none; line-height: 1; }
+  .logo:hover { color: #fff; }
+  .highlight-dot {
+    display: inline-block; width: 8px; height: 8px;
+    background: var(--accent); vertical-align: middle; margin: 0 2px;
+  }
+  .back { font-size: 28px; font-weight: 700; line-height: 1; color: var(--accent); text-decoration: none; }
+  .back:hover { color: var(--accent-hover); }
+
+  .wrap { max-width: 800px; margin: 40px auto 100px; padding: 0 24px; }
+  .panel {
+    background: rgba(0,16,35,0.84);
+    border: 1px solid rgba(255,255,255,0.14);
+    padding: 52px 48px;
+  }
+  h1 { font-size: 1.5rem; font-weight: 700; margin: 0 0 10px; line-height: 1.35; }
+  .meta { font-size: 13px; color: var(--accent); margin-bottom: 44px; }
+  .meta a { color: var(--accent); }
+  h2 {
+    font-size: 14px; font-weight: 700; color: var(--accent);
+    text-transform: uppercase; letter-spacing: 1.5px;
+    margin: 38px 0 12px;
+  }
+  h2 .num { color: rgba(255,255,255,0.4); margin-right: 10px; }
+  p, li {
+    font-family: -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-size: 15px; line-height: 1.75; color: var(--ink);
+  }
+  strong { color: #fff; }
+  ul { padding-left: 20px; margin: 8px 0; }
+  li { margin-bottom: 7px; }
+  a { color: var(--accent); }
+  a:hover { color: var(--accent-hover); }
+  .footnote {
+    margin-top: 48px; padding-top: 22px;
+    border-top: 1px solid rgba(255,255,255,0.14);
+    font-family: -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-size: 12.5px; color: rgba(255,255,255,0.55); line-height: 1.7;
+  }
+  @media (max-width: 600px) {
+    body { background-size: 60px 60px; }
+    .header { padding: 0 20px; height: 60px; }
+    .logo { font-size: 18px; }
+    .back { font-size: 22px; }
+    .wrap { margin: 20px auto 60px; padding: 0 14px; }
+    .panel { padding: 34px 24px; }
+    h1 { font-size: 1.15rem; }
+  }
+</style>
+</head>
+<body>
+  <div class="header">
+    <a href="index.html" class="logo">ZAKHARGALAN<span class="highlight-dot"></span>IN</a>
+    <a href="index.html" class="back">↩</a>
+  </div>
+
+  <div class="wrap">
+    <div class="panel">
+      <h1>Privacy Policy – FE Civil Prep</h1>
+      <p class="meta">Developer: Zakhar Galanin (<a href="https://zakhargalan.in">zakhargalan.in</a>) · Last updated: August 10, 2026</p>
+
+      <p>FE Civil Prep is an independent study tool for the FE Civil exam. This policy explains what data the app handles and why. Short version: no account is required, we don't know your name or email, we show no ads, and we never sell data.</p>
+
+      <h2><span class="num">01</span>Data We Collect</h2>
+      <ul>
+        <li><strong>Random device identifier.</strong> On first launch the app generates a random identifier stored only on your device. It is not derived from your name, email, phone number, or any Apple identifier. We use it to count free AI-tutor usage per day and to associate an active subscription with your device.</li>
+        <li><strong>AI tutor content.</strong> When you use the AI tutor, the practice problem, your chosen answer, and your chat messages are sent to our server and processed by Anthropic's API to generate a response. This content is used to answer your question and is not used to build a profile of you.</li>
+        <li><strong>Usage counters.</strong> Our server keeps a per-device count of AI requests per day to enforce the free plan limit, and standard short-lived technical logs.</li>
+        <li><strong>Subscription status.</strong> Purchases are processed by Apple. We use RevenueCat to check whether a device has an active subscription. We never see your payment details.</li>
+      </ul>
+
+      <h2><span class="num">02</span>Data We Do NOT Collect</h2>
+      <p>Name, email, phone number, contacts, location, photos, advertising identifiers, or tracking across other companies' apps and websites. The app contains no third-party advertising or analytics SDKs. Your study progress and statistics are stored only on your device.</p>
+
+      <h2><span class="num">03</span>Third Parties We Rely On</h2>
+      <ul>
+        <li><strong>Anthropic</strong> — processes AI tutor requests (<a href="https://www.anthropic.com/legal/privacy" target="_blank" rel="noopener">privacy policy</a>)</li>
+        <li><strong>RevenueCat</strong> — subscription status (<a href="https://www.revenuecat.com/privacy" target="_blank" rel="noopener">privacy policy</a>)</li>
+        <li><strong>Apple</strong> — payment processing for subscriptions</li>
+      </ul>
+
+      <h2><span class="num">04</span>Retention and Deletion</h2>
+      <p>AI chat content is processed to generate a response and retained only in short-lived operational logs. Daily usage counters reset each day. Deleting the app removes your device identifier and all local progress. To request deletion of any server-side records associated with your device identifier (shown in the app under Settings), contact us at the email below.</p>
+
+      <h2><span class="num">05</span>Children</h2>
+      <p>The app is intended for adults preparing for a professional engineering licensure exam and is not directed to children under 13.</p>
+
+      <h2><span class="num">06</span>Changes</h2>
+      <p>If this policy changes, the updated version will be posted at this address with a new date.</p>
+
+      <h2><span class="num">07</span>Contact</h2>
+      <p>Zakhar Galanin — <a href="mailto:zakhargalanin@gmail.com">zakhargalanin@gmail.com</a></p>
+
+      <p class="footnote">FE Civil Prep is an independent product and is not affiliated with, endorsed by, or connected to NCEES®. See also the <a href="terms-fe-civil-prep.html">Terms of Service</a>.</p>
+    </div>
+  </div>
+</body>
+</html>
