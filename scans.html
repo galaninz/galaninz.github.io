@@ -169,10 +169,11 @@
       <h2 class="index-title">Scan Library</h2>
       <div id="index"></div>
       <p class="note">
-        Each entry is a scan of an existing object, captured on site and rebuilt
-        as a measured 3D model. Viewer models are reduced for the web.
-        Fabrication-grade files stay in the archive —
-        <a href="mailto:zakhargalanin@gmail.com">request access</a>.
+        Except where noted, these are architectural fragments salvaged from demolished
+        New York buildings, held by the Brooklyn Museum and set into the walls of the
+        Eastern Parkway–Brooklyn Museum station in 2003. Each was captured in place by
+        photogrammetry. Viewer models are reduced for the web; fabrication-grade files
+        stay in the archive — <a href="mailto:zakhargalanin@gmail.com">request access</a>.
       </p>
     </nav>
 
@@ -229,14 +230,82 @@ const CATALOG = [
   {
     id: 'minerva-01',
     title: 'Helmeted head capital',
-    meta: 'Eastern Parkway–Brooklyn Museum station · terracotta · c. 1890–1910',
+    meta: 'Eastern Parkway–Brooklyn Museum station · c. 1890–1910',
     found: 'scans/minerva-capital-01.stl',
     smooth: true,
     gridCells: 80,
-    // scaleHint: 24,
     caption: [
       'A console capital carrying a projecting cornice slab, its face carved as a helmeted head in profile — Minerva, in the Beaux-Arts vocabulary of turn-of-the-century New York.',
-      'The piece is one of dozens of architectural fragments salvaged from demolished New York buildings, held by the Brooklyn Museum and set into the station walls in 2003. Captured in place by photogrammetry; the crest, the coiled hair and the undercut below the abacus all survive in the mesh.'
+      'The crest of the helmet, the coiled hair and the undercut beneath the abacus all survive in the mesh.'
+    ],
+    hotspots: []
+  },
+  {
+    id: 'shell-frieze-01',
+    title: 'Shell and acanthus frieze',
+    meta: 'Eastern Parkway–Brooklyn Museum station · c. 1890–1910',
+    found: 'scans/shell-frieze-01.stl',
+    smooth: true,
+    gridCells: 80,
+    caption: [
+      'A frieze block centred on a deep scallop shell, its lobes fanning from a scrolled base and flanked by acanthus foliage that breaks into volutes at either end. A run of cyma and bead mouldings caps the panel.',
+      'The scallop is one of the most persistent motifs in New York facade work — it carries light well and reads clearly from street level, which is why it survived from the Renaissance into the Beaux-Arts revival almost unchanged.'
+    ],
+    hotspots: []
+  },
+  {
+    id: 'dolphin-panel-01',
+    title: 'Pilaster panel with dolphins',
+    meta: 'Eastern Parkway–Brooklyn Museum station · c. 1890–1910',
+    found: 'scans/dolphin-panel-01.stl',
+    smooth: true,
+    rotation: [0, 180, 0],
+    gridCells: 80,
+    caption: [
+      'A narrow vertical panel from a pilaster face: two grotesque dolphins set nose to tail around a central shell, their bodies curling into the sunken field within a plain raised border.',
+      'Panels like this one ran the height of a pilaster in repeating sections, so a single scan of one good section reconstructs the whole run — the case for digital capture in one object.'
+    ],
+    hotspots: []
+  },
+  {
+    id: 'rinceau-panel-01',
+    title: 'Acanthus rinceau panel',
+    meta: 'Eastern Parkway–Brooklyn Museum station · c. 1890–1910',
+    found: 'scans/rinceau-panel-01.stl',
+    smooth: true,
+    rotation: [0, 180, 0],
+    gridCells: 80,
+    caption: [
+      'A pilaster panel carved with a continuous acanthus rinceau — a stem that coils into paired volutes and throws off leaves at each turn — bordered on one edge by a reeded margin.',
+      'The scroll is cut in low relief with deep undercutting at the volute eyes, the detail most often lost to weathering and the hardest to recover without a measured record of the original.'
+    ],
+    hotspots: []
+  },
+  {
+    id: 'lattice-band-01',
+    title: 'Lattice band moulding',
+    meta: 'Eastern Parkway–Brooklyn Museum station · c. 1890–1910',
+    found: 'scans/lattice-band-01.stl',
+    smooth: true,
+    rotation: [0, 180, 0],
+    gridCells: 80,
+    caption: [
+      'A length of string course: crossed bands forming a lattice, each opening filled with a bud rising from a pair of leaves, framed top and bottom by a plain fillet.',
+      'Banding like this was produced in repeating lengths and ran horizontally across a facade to divide storeys. A single captured length yields the tiling unit for any run.'
+    ],
+    hotspots: []
+  },
+  {
+    id: 'relief-couple-01',
+    title: 'Amorous Couple (Mithuna)',
+    meta: 'Brooklyn Museum · Rajasthan, northern India · sandstone · c. 9th century',
+    found: 'scans/relief-couple-01.stl',
+    smooth: true,
+    gridCells: 80,
+    caption: [
+      'A temple fragment carved with a standing couple in high relief, framed by engaged columns on moulded bases and set beneath an architrave. Sandstone, northern India — probably the Kankroli area of Rajasthan — around the ninth century.',
+      'A pair like this is a mithuna: an auspicious couple rather than a divine one. The distinction is legible in the carving itself — two arms each and none of the attributes that would identify a god — and such figures were set into temple walls to bring good fortune to the building.',
+      'In their original setting these panels were a small part of a far denser scheme and usually sat high on the wall, read from below and at a distance. Brooklyn Museum, gift of Mr. and Mrs. John L. Menke, 86.273.'
     ],
     hotspots: []
   },
