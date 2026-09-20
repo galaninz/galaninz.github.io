@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Impresión 3D en Brooklyn — Sunset Park, Bay Ridge, Park Slope | Galanin 3D</title>
+<meta name="description" content="Servicio de impresión 3D en Sunset Park, Brooklyn. Piezas de repuesto, letreros, figuras, series cortas y escaneo a modelo 3D. Recogida gratis, entrega en Brooklyn $15.">
+<link rel="canonical" href="https://zakhargalan.in/3d-printing/es/">
+<link rel="alternate" hreflang="en" href="https://zakhargalan.in/3d-printing/">
+<link rel="alternate" hreflang="es" href="https://zakhargalan.in/3d-printing/es/">
+<link rel="alternate" hreflang="ru" href="https://zakhargalan.in/3d-printing/ru/">
+<link rel="alternate" hreflang="x-default" href="https://zakhargalan.in/3d-printing/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #f6f4ef;
+    --ink: #13263f;
+    --ink-soft: #5c6b80;
+    --accent: #ff851b;
+    --rule: #ddd8cf;
+    --grid: #e7e2d8;
+    --cell: 40px;
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--paper); }
+  body {
+    margin: 0; color: var(--ink);
+    font-family: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    font-size: 16px; line-height: 1.65;
+    background-color: var(--paper);
+    background-image:
+      linear-gradient(to right, var(--grid) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+    background-size: var(--cell) var(--cell);
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 28px; }
+  @media (max-width: 600px) { .wrap { padding: 0 18px; } :root { --cell: 32px; } }
+
+  /* header */
+  header.top {
+    border-bottom: 1px solid var(--rule); background: rgba(246,244,239,.92);
+    backdrop-filter: blur(6px);
+    position: sticky; top: 0; z-index: 10;
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+  .top .wrap {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px; min-height: 64px; flex-wrap: wrap;
+  }
+  .logo {
+    font-family: Orbitron, Arial, sans-serif; font-weight: 700;
+    font-size: 19px; letter-spacing: .01em; color: var(--ink);
+    text-decoration: none; white-space: nowrap;
+  }
+  .logo .dot {
+    display: inline-block; width: 7px; height: 7px;
+    background: var(--accent); vertical-align: middle; margin: 0 2px;
+  }
+  .langs { display: flex; align-items: center; gap: 2px; font-size: 12px; }
+  .langs a {
+    color: var(--ink-soft); text-decoration: none; padding: 5px 9px;
+    border: 1px solid transparent; letter-spacing: .06em; text-transform: uppercase;
+  }
+  .langs a:hover { color: var(--accent); }
+  .langs a[aria-current="true"] { color: var(--ink); border-color: var(--rule); background: #fff; }
+  .back { font-size: 12px; color: var(--accent); text-decoration: none; letter-spacing: .06em; text-transform: uppercase; }
+  .back:hover { text-decoration: underline; }
+
+  /* hero */
+  .hero { padding: 64px 0 8px; }
+  h1 {
+    font-family: Orbitron, Arial, sans-serif; font-weight: 700;
+    font-size: clamp(26px, 4.6vw, 44px); line-height: 1.12;
+    margin: 0 0 6px; letter-spacing: -.01em;
+  }
+  h1 .sub { display: block; color: var(--accent); }
+  .lead { font-size: 19px; line-height: 1.55; max-width: 34em; margin: 20px 0 10px; }
+  .owner { font-size: 14px; color: var(--ink-soft); margin: 0 0 8px; }
+
+  /* section headings — the orange square is the through-line with the portfolio */
+  h2 {
+    font-family: Orbitron, Arial, sans-serif; font-weight: 400;
+    font-size: 12px; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--ink); margin: 64px 0 20px; padding-left: 20px; position: relative;
+  }
+  h2::before {
+    content: ""; position: absolute; left: 0; top: 5px;
+    width: 8px; height: 8px; background: var(--accent);
+  }
+  h3 { font-size: 16px; font-weight: 600; margin: 0 0 4px; }
+  p { max-width: 36em; }
+  a.link { color: #b85a00; text-decoration: underline; text-underline-offset: 2px; }
+  a.link:hover { color: var(--accent); }
+
+  /* services */
+  .svc { border-top: 1px solid var(--rule); }
+  .svc-row {
+    display: grid; grid-template-columns: 1fr auto; gap: 8px 32px;
+    padding: 20px 0; border-bottom: 1px solid var(--rule); align-items: start;
+  }
+  .svc-row .desc { font-size: 14.5px; color: var(--ink-soft); margin: 0; max-width: 44em; }
+  .svc-row .meta { text-align: right; white-space: nowrap; }
+  .svc-row .price { font-weight: 600; font-size: 17px; color: var(--ink); display: block; }
+  .svc-row .turn { font-size: 13px; color: var(--ink-soft); }
+  @media (max-width: 640px) {
+    .svc-row { grid-template-columns: 1fr; gap: 6px; }
+    .svc-row .meta { text-align: left; }
+    .svc-row .price { display: inline; margin-right: 10px; }
+  }
+  .terms {
+    margin-top: 18px; font-size: 14px; color: var(--ink-soft);
+    background: #fff; border: 1px solid var(--rule); padding: 16px 18px;
+  }
+
+  /* steps */
+  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 26px; }
+  @media (max-width: 860px) { .steps { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 520px) { .steps { grid-template-columns: 1fr; gap: 20px; } }
+  .step { border-top: 2px solid var(--accent); padding-top: 12px; }
+  .step .num { font-family: Orbitron, Arial, sans-serif; font-size: 12px; color: var(--accent); letter-spacing: .1em; }
+  .step p { font-size: 14.5px; color: var(--ink-soft); margin: 6px 0 0; }
+
+  /* combo block */
+  .combo { background: #fff; border: 1px solid var(--rule); padding: 28px; }
+  .combo p { font-size: 15px; margin: 0 0 12px; }
+  .combo p:last-child { margin-bottom: 0; }
+  @media (max-width: 600px) { .combo { padding: 20px; } }
+
+  /* equipment */
+  .spec { font-size: 15px; }
+  .spec .warn { color: var(--ink-soft); }
+
+  /* areas */
+  .areas { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; margin: 0; }
+  .areas li {
+    font-size: 14px; background: #fff; border: 1px solid var(--rule);
+    padding: 6px 12px; color: var(--ink);
+  }
+
+  /* info columns */
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+  @media (max-width: 760px) { .cols { grid-template-columns: 1fr; gap: 8px; } }
+  .row {
+    display: flex; justify-content: space-between; gap: 18px;
+    padding: 11px 0; border-bottom: 1px solid var(--rule); font-size: 15px;
+  }
+  .row .k { color: var(--ink-soft); }
+  .row a { color: #b85a00; text-decoration: none; }
+  .row a:hover { text-decoration: underline; }
+  .note { font-size: 14px; color: var(--ink-soft); margin-top: 14px; }
+
+  /* photo placeholders */
+  .shot {
+    border: 1px dashed #c9c2b6; background: #fffdf9;
+    padding: 22px; margin: 18px 0; display: flex; gap: 16px; align-items: center;
+  }
+  .shot .tag {
+    font-family: Orbitron, Arial, sans-serif; font-size: 10px; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--accent); white-space: nowrap;
+  }
+  .shot .what { font-size: 14px; color: var(--ink-soft); }
+  @media (max-width: 600px) { .shot { flex-direction: column; align-items: flex-start; gap: 8px; } }
+
+  /* faq */
+  details { border-bottom: 1px solid var(--rule); padding: 16px 0; }
+  summary {
+    cursor: pointer; font-size: 16px; font-weight: 500; color: var(--ink);
+    list-style: none; position: relative; padding-right: 28px;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::after {
+    content: "+"; position: absolute; right: 2px; top: -2px;
+    color: var(--accent); font-size: 20px; font-weight: 400;
+  }
+  details[open] summary::after { content: "\2013"; }
+  details p { font-size: 15px; color: var(--ink-soft); margin: 10px 0 0; }
+
+  /* cta */
+  .cta {
+    margin: 56px 0 0; background: var(--ink); color: #fff;
+    padding: 32px; display: flex; justify-content: space-between;
+    align-items: center; gap: 24px; flex-wrap: wrap;
+  }
+  .cta p { margin: 0; color: rgba(255,255,255,.85); font-size: 15px; max-width: 36em; }
+  .cta strong { color: #fff; display: block; font-family: Orbitron, Arial, sans-serif; font-size: 15px; margin-bottom: 6px; }
+  .cta a.btn {
+    background: var(--accent); color: #12233c; text-decoration: none;
+    font-weight: 600; font-size: 15px; padding: 13px 22px; white-space: nowrap;
+  }
+  .cta a.btn:hover { background: #ffa64d; }
+
+  footer {
+    margin-top: 64px; border-top: 1px solid var(--rule);
+    padding: 26px 0 60px; font-size: 13.5px; color: var(--ink-soft);
+  }
+  footer a { color: #b85a00; text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+  footer .sep { color: var(--rule); margin: 0 8px; }
+
+  a:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "name": "Galanin 3D",
+  "url": "https://zakhargalan.in/3d-printing/es/",
+  "description": "Servicio de impresión 3D en Sunset Park, Brooklyn. Piezas de repuesto, letreros, figuras, series cortas y escaneo a modelo 3D. Recogida gratis, entrega en Brooklyn $15.",
+  "founder": {
+    "@type": "Person",
+    "name": "Zakhar Galanin"
+  },
+  "email": "zakhargalanin@gmail.com",
+  "priceRange": "$35–$1200",
+  "currenciesAccepted": "USD",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Brooklyn",
+    "addressRegion": "NY",
+    "addressCountry": "US"
+  },
+  "areaServed": [
+    {
+      "@type": "Place",
+      "name": "Sunset Park, Brooklyn, NY"
+    },
+    {
+      "@type": "Place",
+      "name": "Bay Ridge, Brooklyn, NY"
+    },
+    {
+      "@type": "Place",
+      "name": "Dyker Heights, Brooklyn, NY"
+    },
+    {
+      "@type": "Place",
+      "name": "Park Slope, Brooklyn, NY"
+    },
+    {
+      "@type": "Place",
+      "name": "Borough Park, Brooklyn, NY"
+    },
+    {
+      "@type": "Place",
+      "name": "Gowanus, Brooklyn, NY"
+    },
+    {
+      "@type": "Place",
+      "name": "Windsor Terrace, Brooklyn, NY"
+    },
+    {
+      "@type": "Place",
+      "name": "Kensington, Brooklyn, NY"
+    },
+    {
+      "@type": "Place",
+      "name": "Bensonhurst, Brooklyn, NY"
+    },
+    {
+      "@type": "Place",
+      "name": "Red Hook, Brooklyn, NY"
+    },
+    {
+      "@type": "Place",
+      "name": "Sheepshead Bay, Brooklyn, NY"
+    },
+    {
+      "@type": "Place",
+      "name": "Brighton Beach, Brooklyn, NY"
+    }
+  ],
+  "openingHoursSpecification": [
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday"
+      ],
+      "opens": "18:00",
+      "closes": "23:59"
+    }
+  ],
+  "availableLanguage": [
+    "en",
+    "es",
+    "ru"
+  ],
+  "inLanguage": "es"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "No tengo un archivo 3D. ¿Aun así pueden imprimirlo?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Sí. Mande fotos de la pieza con una regla o cinta métrica en el cuadro, o traiga la pieza rota. Modelar a partir de una muestra o de una foto forma parte del servicio de pieza de repuesto y ya está incluido en el precio."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Qué tamaño máximo y en qué material?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Hasta 256 × 256 × 256 mm en una sola pieza, en PLA o PETG, con hasta cuatro colores en una impresión. Los objetos más grandes se imprimen por partes y se unen. El PETG es la opción cuando hay calor, humedad o carga."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Cuánto cuesta y hay un mínimo?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Desde $35 una placa o número de casa y desde $45 una pieza de repuesto. El pedido mínimo es de $40. Usted recibe un precio cerrado antes de imprimir, así que el precio no cambia después."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Cuánto tarda?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "De dos a cuatro días la mayoría de las piezas, de cinco a diez días una serie. El servicio urgente de 24 a 48 horas tiene un recargo del 50% y depende de la fila de trabajo."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Entregan o tengo que recoger?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "La recogida en Sunset Park es gratis. La entrega en cualquier barrio de la zona de servicio cuesta $15."
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="../../index.html?sorted=true">ZAKHARGALAN<span class="dot"></span>IN</a>
+    <nav class="langs" aria-label="Language"><a href="../">English</a><a href="../es/" aria-current="true">Español</a><a href="../ru/">Русский</a></nav>
+    <a class="back" href="../../index.html?sorted=true">Portafolio</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="hero">
+    <h1>Servicio de impresión 3D<span class="sub">Sunset Park, Brooklyn</span></h1>
+    <p class="lead">Piezas de repuesto, letreros y números de casa, figuras hechas a partir de fotos, series cortas para negocios del barrio y réplicas de elementos decorativos. Impreso en Brooklyn, con precio cerrado antes de encender la máquina, para recoger o con entrega en el sur de Brooklyn.</p>
+    <p class="owner">Galanin 3D — Zakhar Galanin, propietario único.</p>
+  </div>
+
+  <div class="shot"><span class="tag">Foto 01</span><span class="what">Imagen principal: la impresora trabajando, una pieza visible en la placa, el taller en cuadro. Horizontal, tomada en el sitio — nada de banco de imágenes.</span></div>
+
+  <h2>Servicios y precios</h2>
+  <div class="svc"><div class="svc-row"><div><h3>Pieza de repuesto a partir de una muestra o foto</h3><p class="desc">Un soporte, perilla, clip, bisagra o carcasa rota que ya no se fabrica. Traiga la pieza o mande fotos con una regla en el cuadro.</p></div><div class="meta"><span class="price">desde $45</span><span class="turn">2–4 días</span></div></div><div class="svc-row"><div><h3>Placa, número de casa o letrero</h3><p class="desc">Números de puerta, placas con nombre, letreros para tienda u oficina. Hasta cuatro colores en una sola pieza — sin necesidad de pintar.</p></div><div class="meta"><span class="price">$35–90</span><span class="turn">2–3 días</span></div></div><div class="svc-row"><div><h3>Figura a partir de una foto</h3><p class="desc">Una persona o una mascota, modelada con las fotos que usted mande e impresa como recuerdo.</p></div><div class="meta"><span class="price">desde $85</span><span class="turn">5–7 días</span></div></div><div class="svc-row"><div><h3>Serie corta, de 10 a 50 piezas</h3><p class="desc">Exhibidores, soportes, plantillas, artículos con su marca e insertos de empaque para negocios locales. Mínimo $200.</p></div><div class="meta"><span class="price">$18–35 c/u</span><span class="turn">5–10 días</span></div></div><div class="svc-row"><div><h3>Escaneo a modelo 3D — solo el archivo</h3><p class="desc">Un objeto existente se captura y se reconstruye como un modelo 3D limpio y con medidas reales. El archivo es suyo; imprimir es opcional.</p></div><div class="meta"><span class="price">$120–450</span><span class="turn">3–5 días</span></div></div><div class="svc-row"><div><h3>Réplica de un elemento histórico o decorativo</h3><p class="desc">Ornamento, perfiles de molduras y detalle tallado, capturados del original y reproducidos — incluso piezas que ya no figuran en ningún catálogo.</p></div><div class="meta"><span class="price">$250–1200</span><span class="turn">cotización por pieza</span></div></div><div class="svc-row"><div><h3>Objeto de diseño o mueble a la medida</h3><p class="desc">Una pieza única diseñada y fabricada según su idea, desde una lámpara hasta un componente de mueble.</p></div><div class="meta"><span class="price">desde $600</span><span class="turn">cotización por pieza</span></div></div></div>
+  <p class="terms">Pedido mínimo $40. Recogida gratuita en Sunset Park; entrega con tarifa fija de $15 dentro de la zona de servicio. Servicio urgente de 24 a 48 horas con un recargo del 50%. Todo trabajo se cotiza por escrito antes de imprimir.</p>
+
+  <h2>Cómo funciona</h2>
+  <div class="steps"><div class="step"><div class="num">01</div><p>Mande fotos, un dibujo o un archivo 3D. Si es una pieza de repuesto, ponga una regla o cinta métrica en el cuadro para que la escala quede clara.</p></div><div class="step"><div class="num">02</div><p>Recibe un precio cerrado y una fecha de entrega, normalmente esa misma noche. No se imprime nada hasta que usted lo apruebe.</p></div><div class="step"><div class="num">03</div><p>Si hace falta se modela la pieza, se imprime en PLA o PETG, hasta en cuatro colores, y se verifica contra sus medidas.</p></div><div class="step"><div class="num">04</div><p>Recójala gratis en Sunset Park o pida la entrega en cualquier punto de la zona de servicio por $15.</p></div></div>
+
+  <div class="shot"><span class="tag">Foto 02</span><span class="what">Imagen del proceso: la pieza rota y el repuesto impreso, juntos en la mano. La imagen más convincente de toda la página.</span></div>
+
+  <h2>Escanear, modelar, imprimir — un solo proceso</h2>
+  <div class="combo"><p>Hay objetos que no tienen archivo ni número de catálogo: una pieza descontinuada, un ornamento tallado en un edificio, un herraje que se hizo una vez y nunca más. Esos no empiezan con un plano, sino con un escaneo.</p><p>El objeto se captura en el sitio por fotogrametría, se reconstruye como modelo 3D con medidas reales, se reparan digitalmente las partes dañadas y luego se imprime — ya sea como la pieza final o como el molde maestro, cuando la pieza definitiva tiene que ser de yeso, piedra artificial o metal. El modelo queda suyo en cualquier caso.</p><p>Hay ejemplos capturados en la <a class="link" href="../../scans.html">biblioteca de escaneos</a>, y el trabajo de levantamiento y modelado se describe en la <a class="link" href="../../services.html">página de CAD-to-BIM y scan-to-BIM</a>.</p></div>
+
+  <div class="shot"><span class="tag">Foto 03</span><span class="what">Secuencia de escaneo a impresión, tres cuadros: el elemento en su sitio, el modelo 3D en pantalla, la pieza impresa junto al original.</span></div>
+
+  <h2>Equipo</h2>
+  <p class="spec">Bambu Lab P1P con AMS. Volumen de impresión 256 × 256 × 256 mm, hasta cuatro colores en una sola impresión. Los materiales son PLA y PETG: PLA para piezas de exhibición, letreros y figuras; PETG cuando la pieza tiene que aguantar calor, humedad o carga.</p>
+  <p class="spec warn">No se ofrecen ABS ni ASA: la impresora es de estructura abierta y esos materiales necesitan una cámara cerrada y caliente para salir bien. Los objetos grandes se imprimen por partes y se unen.</p>
+
+  <h2>Zona de servicio</h2>
+  <ul class="areas"><li>Sunset Park</li><li>Bay Ridge</li><li>Dyker Heights</li><li>Park Slope</li><li>Borough Park</li><li>Gowanus</li><li>Windsor Terrace</li><li>Kensington</li><li>Bensonhurst</li><li>Red Hook</li><li>Sheepshead Bay</li><li>Brighton Beach</li></ul>
+
+  <div class="cols" style="margin-top:56px">
+    <div>
+      <h2 style="margin-top:0">Horario</h2>
+      <div class="row"><span class="k">Lunes a viernes</span><span>6:00 PM – 12:00 AM</span></div><div class="row"><span class="k">Sábado y domingo</span><span>Con cita previa</span></div>
+      <p class="note">Los mensajes enviados durante el día se contestan esa misma noche.</p>
+    </div>
+    <div>
+      <h2 style="margin-top:0">Contacto</h2>
+      <div class="row"><span class="k">Correo</span><a href="mailto:zakhargalanin@gmail.com">zakhargalanin@gmail.com</a></div><div class="row"><span class="k">Teléfono</span><span>NÚMERO POR AGREGAR</span></div><div class="row"><span class="k">Ubicación</span><span>Sunset Park, Brooklyn, NY</span></div>
+      <p class="note">Mande fotos en su primer mensaje y recibirá el precio más rápido.</p>
+    </div>
+  </div>
+
+  <h2>Preguntas</h2>
+  <details><summary>No tengo un archivo 3D. ¿Aun así pueden imprimirlo?</summary><p>Sí. Mande fotos de la pieza con una regla o cinta métrica en el cuadro, o traiga la pieza rota. Modelar a partir de una muestra o de una foto forma parte del servicio de pieza de repuesto y ya está incluido en el precio.</p></details><details><summary>¿Qué tamaño máximo y en qué material?</summary><p>Hasta 256 × 256 × 256 mm en una sola pieza, en PLA o PETG, con hasta cuatro colores en una impresión. Los objetos más grandes se imprimen por partes y se unen. El PETG es la opción cuando hay calor, humedad o carga.</p></details><details><summary>¿Cuánto cuesta y hay un mínimo?</summary><p>Desde $35 una placa o número de casa y desde $45 una pieza de repuesto. El pedido mínimo es de $40. Usted recibe un precio cerrado antes de imprimir, así que el precio no cambia después.</p></details><details><summary>¿Cuánto tarda?</summary><p>De dos a cuatro días la mayoría de las piezas, de cinco a diez días una serie. El servicio urgente de 24 a 48 horas tiene un recargo del 50% y depende de la fila de trabajo.</p></details><details><summary>¿Entregan o tengo que recoger?</summary><p>La recogida en Sunset Park es gratis. La entrega en cualquier barrio de la zona de servicio cuesta $15.</p></details>
+
+  <div class="cta">
+    <p><strong>Mande una foto y reciba un precio</strong>Fotografíe la pieza con una regla al lado, escriba para qué sirve, y esa misma noche tendrá un precio cerrado.</p>
+    <a class="btn" href="mailto:zakhargalanin@gmail.com">Mandar una foto</a>
+  </div>
+
+  <footer>
+    Galanin 3D <span class="sep">·</span> Sunset Park, Brooklyn, NY
+    <span class="sep">·</span> <a href="mailto:zakhargalanin@gmail.com">zakhargalanin@gmail.com</a>
+    <span class="sep">·</span> <a href="../../index.html?sorted=true">Portafolio</a>
+    <span class="sep">·</span> <a href="../../scans.html">Biblioteca de escaneos</a>
+  </footer>
+</main>
+</body>
+</html>

@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>3D-печать в Бруклине — Сансет-Парк, Бэй-Ридж, Брайтон | Galanin 3D</title>
+<meta name="description" content="3D-печать в Бруклине, база в Сансет-Парке. Детали на замену, таблички и номера домов, фигурки по фото, мелкие серии, скан в 3D-модель. Самовывоз бесплатно, доставка $15.">
+<link rel="canonical" href="https://zakhargalan.in/3d-printing/ru/">
+<link rel="alternate" hreflang="en" href="https://zakhargalan.in/3d-printing/">
+<link rel="alternate" hreflang="es" href="https://zakhargalan.in/3d-printing/es/">
+<link rel="alternate" hreflang="ru" href="https://zakhargalan.in/3d-printing/ru/">
+<link rel="alternate" hreflang="x-default" href="https://zakhargalan.in/3d-printing/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #f6f4ef;
+    --ink: #13263f;
+    --ink-soft: #5c6b80;
+    --accent: #ff851b;
+    --rule: #ddd8cf;
+    --grid: #e7e2d8;
+    --cell: 40px;
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--paper); }
+  body {
+    margin: 0; color: var(--ink);
+    font-family: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    font-size: 16px; line-height: 1.65;
+    background-color: var(--paper);
+    background-image:
+      linear-gradient(to right, var(--grid) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+    background-size: var(--cell) var(--cell);
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 28px; }
+  @media (max-width: 600px) { .wrap { padding: 0 18px; } :root { --cell: 32px; } }
+
+  /* header */
+  header.top {
+    border-bottom: 1px solid var(--rule); background: rgba(246,244,239,.92);
+    backdrop-filter: blur(6px);
+    position: sticky; top: 0; z-index: 10;
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+  .top .wrap {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px; min-height: 64px; flex-wrap: wrap;
+  }
+  .logo {
+    font-family: Orbitron, Arial, sans-serif; font-weight: 700;
+    font-size: 19px; letter-spacing: .01em; color: var(--ink);
+    text-decoration: none; white-space: nowrap;
+  }
+  .logo .dot {
+    display: inline-block; width: 7px; height: 7px;
+    background: var(--accent); vertical-align: middle; margin: 0 2px;
+  }
+  .langs { display: flex; align-items: center; gap: 2px; font-size: 12px; }
+  .langs a {
+    color: var(--ink-soft); text-decoration: none; padding: 5px 9px;
+    border: 1px solid transparent; letter-spacing: .06em; text-transform: uppercase;
+  }
+  .langs a:hover { color: var(--accent); }
+  .langs a[aria-current="true"] { color: var(--ink); border-color: var(--rule); background: #fff; }
+  .back { font-size: 12px; color: var(--accent); text-decoration: none; letter-spacing: .06em; text-transform: uppercase; }
+  .back:hover { text-decoration: underline; }
+
+  /* hero */
+  .hero { padding: 64px 0 8px; }
+  h1 {
+    font-family: Orbitron, Arial, sans-serif; font-weight: 700;
+    font-size: clamp(26px, 4.6vw, 44px); line-height: 1.12;
+    margin: 0 0 6px; letter-spacing: -.01em;
+  }
+  h1 .sub { display: block; color: var(--accent); }
+  .lead { font-size: 19px; line-height: 1.55; max-width: 34em; margin: 20px 0 10px; }
+  .owner { font-size: 14px; color: var(--ink-soft); margin: 0 0 8px; }
+
+  /* section headings — the orange square is the through-line with the portfolio */
+  h2 {
+    font-family: Orbitron, Arial, sans-serif; font-weight: 400;
+    font-size: 12px; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--ink); margin: 64px 0 20px; padding-left: 20px; position: relative;
+  }
+  h2::before {
+    content: ""; position: absolute; left: 0; top: 5px;
+    width: 8px; height: 8px; background: var(--accent);
+  }
+  h3 { font-size: 16px; font-weight: 600; margin: 0 0 4px; }
+  p { max-width: 36em; }
+  a.link { color: #b85a00; text-decoration: underline; text-underline-offset: 2px; }
+  a.link:hover { color: var(--accent); }
+
+  /* services */
+  .svc { border-top: 1px solid var(--rule); }
+  .svc-row {
+    display: grid; grid-template-columns: 1fr auto; gap: 8px 32px;
+    padding: 20px 0; border-bottom: 1px solid var(--rule); align-items: start;
+  }
+  .svc-row .desc { font-size: 14.5px; color: var(--ink-soft); margin: 0; max-width: 44em; }
+  .svc-row .meta { text-align: right; white-space: nowrap; }
+  .svc-row .price { font-weight: 600; font-size: 17px; color: var(--ink); display: block; }
+  .svc-row .turn { font-size: 13px; color: var(--ink-soft); }
+  @media (max-width: 640px) {
+    .svc-row { grid-template-columns: 1fr; gap: 6px; }
+    .svc-row .meta { text-align: left; }
+    .svc-row .price { display: inline; margin-right: 10px; }
+  }
+  .terms {
+    margin-top: 18px; font-size: 14px; color: var(--ink-soft);
+    background: #fff; border: 1px solid var(--rule); padding: 16px 18px;
+  }
+
+  /* steps */
+  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 26px; }
+  @media (max-width: 860px) { .steps { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 520px) { .steps { grid-template-columns: 1fr; gap: 20px; } }
+  .step { border-top: 2px solid var(--accent); padding-top: 12px; }
+  .step .num { font-family: Orbitron, Arial, sans-serif; font-size: 12px; color: var(--accent); letter-spacing: .1em; }
+  .step p { font-size: 14.5px; color: var(--ink-soft); margin: 6px 0 0; }
+
+  /* combo block */
+  .combo { background: #fff; border: 1px solid var(--rule); padding: 28px; }
+  .combo p { font-size: 15px; margin: 0 0 12px; }
+  .combo p:last-child { margin-bottom: 0; }
+  @media (max-width: 600px) { .combo { padding: 20px; } }
+
+  /* equipment */
+  .spec { font-size: 15px; }
+  .spec .warn { color: var(--ink-soft); }
+
+  /* areas */
+  .areas { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; margin: 0; }
+  .areas li {
+    font-size: 14px; background: #fff; border: 1px solid var(--rule);
+    padding: 6px 12px; color: var(--ink);
+  }
+
+  /* info columns */
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+  @media (max-width: 760px) { .cols { grid-template-columns: 1fr; gap: 8px; } }
+  .row {
+    display: flex; justify-content: space-between; gap: 18px;
+    padding: 11px 0; border-bottom: 1px solid var(--rule); font-size: 15px;
+  }
+  .row .k { color: var(--ink-soft); }
+  .row a { color: #b85a00; text-decoration: none; }
+  .row a:hover { text-decoration: underline; }
+  .note { font-size: 14px; color: var(--ink-soft); margin-top: 14px; }
+
+  /* photo placeholders */
+  .shot {
+    border: 1px dashed #c9c2b6; background: #fffdf9;
+    padding: 22px; margin: 18px 0; display: flex; gap: 16px; align-items: center;
+  }
+  .shot .tag {
+    font-family: Orbitron, Arial, sans-serif; font-size: 10px; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--accent); white-space: nowrap;
+  }
+  .shot .what { font-size: 14px; color: var(--ink-soft); }
+  @media (max-width: 600px) { .shot { flex-direction: column; align-items: flex-start; gap: 8px; } }
+
+  /* faq */
+  details { border-bottom: 1px solid var(--rule); padding: 16px 0; }
+  summary {
+    cursor: pointer; font-size: 16px; font-weight: 500; color: var(--ink);
+    list-style: none; position: relative; padding-right: 28px;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::after {
+    content: "+"; position: absolute; right: 2px; top: -2px;
+    color: var(--accent); font-size: 20px; font-weight: 400;
+  }
+  details[open] summary::after { content: "\2013"; }
+  details p { font-size: 15px; color: var(--ink-soft); margin: 10px 0 0; }
+
+  /* cta */
+  .cta {
+    margin: 56px 0 0; background: var(--ink); color: #fff;
+    padding: 32px; display: flex; justify-content: space-between;
+    align-items: center; gap: 24px; flex-wrap: wrap;
+  }
+  .cta p { margin: 0; color: rgba(255,255,255,.85); font-size: 15px; max-width: 36em; }
+  .cta strong { color: #fff; display: block; font-family: Orbitron, Arial, sans-serif; font-size: 15px; margin-bottom: 6px; }
+  .cta a.btn {
+    background: var(--accent); color: #12233c; text-decoration: none;
+    font-weight: 600; font-size: 15px; padding: 13px 22px; white-space: nowrap;
+  }
+  .cta a.btn:hover { background: #ffa64d; }
+
+  footer {
+    margin-top: 64px; border-top: 1px solid var(--rule);
+    padding: 26px 0 60px; font-size: 13.5px; color: var(--ink-soft);
+  }
+  footer a { color: #b85a00; text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+  footer .sep { color: var(--rule); margin: 0 8px; }
+
+  a:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "name": "Galanin 3D",
+  "url": "https://zakhargalan.in/3d-printing/ru/",
+  "description": "3D-печать в Бруклине, база в Сансет-Парке. Детали на замену, таблички и номера домов, фигурки по фото, мелкие серии, скан в 3D-модель. Самовывоз бесплатно, доставка $15.",
+  "founder": {
+    "@type": "Person",
+    "name": "Zakhar Galanin"
+  },
+  "email": "zakhargalanin@gmail.com",
+  "priceRange": "$35–$1200",
+  "currenciesAccepted": "USD",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Brooklyn",
+    "addressRegion": "NY",
+    "addressCountry": "US"
+  },
+  "areaServed": [
+    {
+      "@type": "Place",
+      "name": "Sunset Park, Brooklyn, NY"
+    },
+    {
+      "@type": "Place",
+      "name": "Bay Ridge, Brooklyn, NY"
+    },
+    {
+      "@type": "Place",
+      "name": "Dyker Heights, Brooklyn, NY"
+    },
+    {
+      "@type": "Place",
+      "name": "Park Slope, Brooklyn, NY"
+    },
+    {
+      "@type": "Place",
+      "name": "Borough Park, Brooklyn, NY"
+    },
+    {
+      "@type": "Place",
+      "name": "Gowanus, Brooklyn, NY"
+    },
+    {
+      "@type": "Place",
+      "name": "Windsor Terrace, Brooklyn, NY"
+    },
+    {
+      "@type": "Place",
+      "name": "Kensington, Brooklyn, NY"
+    },
+    {
+      "@type": "Place",
+      "name": "Bensonhurst, Brooklyn, NY"
+    },
+    {
+      "@type": "Place",
+      "name": "Red Hook, Brooklyn, NY"
+    },
+    {
+      "@type": "Place",
+      "name": "Sheepshead Bay, Brooklyn, NY"
+    },
+    {
+      "@type": "Place",
+      "name": "Brighton Beach, Brooklyn, NY"
+    }
+  ],
+  "openingHoursSpecification": [
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday"
+      ],
+      "opens": "18:00",
+      "closes": "23:59"
+    }
+  ],
+  "availableLanguage": [
+    "en",
+    "es",
+    "ru"
+  ],
+  "inLanguage": "ru"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "У меня нет 3D-файла. Напечатаете?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Да. Пришлите фотографии детали с линейкой или рулеткой в кадре либо привезите сам сломанный предмет. Построение модели по образцу или фото входит в услугу «деталь на замену» и уже учтено в цене."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Какой максимальный размер и из чего печатаете?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "До 256 × 256 × 256 мм одной деталью, из PLA или PETG, до четырёх цветов в одной печати. Более крупные вещи печатаются частями и собираются. PETG — для всего, что держит нагрев, влагу или нагрузку."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Сколько стоит и есть ли минимум?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Табличка или номер дома — от $35, деталь на замену — от $45. Минимальный заказ $40. Цена фиксируется до начала печати и после работы не меняется."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Сколько ждать?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Большинство деталей — 2–4 дня, серия — 5–10 дней. Срочно, за 24–48 часов, можно за +50% и при наличии места в очереди."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Доставляете или нужно забирать?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Самовывоз в Сансет-Парке бесплатно. Доставка в любой район из списка зоны обслуживания — $15."
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="../../index.html?sorted=true">ZAKHARGALAN<span class="dot"></span>IN</a>
+    <nav class="langs" aria-label="Language"><a href="../">English</a><a href="../es/">Español</a><a href="../ru/" aria-current="true">Русский</a></nav>
+    <a class="back" href="../../index.html?sorted=true">Портфолио</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="hero">
+    <h1>3D-печать<span class="sub">Сансет-Парк, Бруклин</span></h1>
+    <p class="lead">Детали на замену, таблички и номера домов, фигурки по фотографии, мелкие серии для бизнеса и реплики декоративных элементов. Печатаю в Бруклине, цену называю до начала работы, отдаю самовывозом или привожу по югу Бруклина.</p>
+    <p class="owner">Galanin 3D — Захар Галанин, частный мастер.</p>
+  </div>
+
+  <div class="shot"><span class="tag">Фото 01</span><span class="what">Главный кадр: принтер в работе, деталь на столе, рабочее место в кадре. Горизонтально, снято на месте — без стоков.</span></div>
+
+  <h2>Услуги и цены</h2>
+  <div class="svc"><div class="svc-row"><div><h3>Деталь на замену по образцу или фото</h3><p class="desc">Сломанный кронштейн, ручка, клипса, петля или корпус, которых больше не выпускают. Привезите деталь или пришлите фото с линейкой в кадре.</p></div><div class="meta"><span class="price">от $45</span><span class="turn">2–4 дня</span></div></div><div class="svc-row"><div><h3>Табличка, номер дома, вывеска</h3><p class="desc">Номера на дверь, именные таблички, вывески для магазина или офиса. До четырёх цветов в одной печати — красить не нужно.</p></div><div class="meta"><span class="price">$35–90</span><span class="turn">2–3 дня</span></div></div><div class="svc-row"><div><h3>Фигурка по фотографии</h3><p class="desc">Человек или питомец: модель строится по вашим фотографиям и печатается на память.</p></div><div class="meta"><span class="price">от $85</span><span class="turn">5–7 дней</span></div></div><div class="svc-row"><div><h3>Мелкая серия, 10–50 штук</h3><p class="desc">Подставки, держатели, оснастка, фирменные мелочи и вкладыши в упаковку для местного бизнеса. Минимум $200.</p></div><div class="meta"><span class="price">$18–35 за шт.</span><span class="turn">5–10 дней</span></div></div><div class="svc-row"><div><h3>Скан в 3D-модель — только файл</h3><p class="desc">Существующий предмет снимается и превращается в чистую обмерную 3D-модель. Файл ваш, печать по желанию.</p></div><div class="meta"><span class="price">$120–450</span><span class="turn">3–5 дней</span></div></div><div class="svc-row"><div><h3>Реплика исторического или декоративного элемента</h3><p class="desc">Орнамент, профили тяг и резной декор снимаются с оригинала и воспроизводятся — включая то, чего нет ни в одном каталоге.</p></div><div class="meta"><span class="price">$250–1200</span><span class="turn">по предмету</span></div></div><div class="svc-row"><div><h3>Дизайн-объект или предмет мебели на заказ</h3><p class="desc">Единичная вещь по вашему заданию — от светильника до мебельного элемента.</p></div><div class="meta"><span class="price">от $600</span><span class="turn">по предмету</span></div></div></div>
+  <p class="terms">Минимальный заказ $40. Самовывоз в Сансет-Парке бесплатно, доставка по зоне обслуживания — $15. Срочно, за 24–48 часов, +50%. Цена всегда называется письменно до начала печати.</p>
+
+  <h2>Как это работает</h2>
+  <div class="steps"><div class="step"><div class="num">01</div><p>Присылаете фото, эскиз или готовый 3D-файл. Для детали на замену положите в кадр линейку или рулетку, чтобы масштаб был однозначным.</p></div><div class="step"><div class="num">02</div><p>Получаете фиксированную цену и дату готовности, обычно в тот же вечер. Пока вы не согласны — ничего не печатается.</p></div><div class="step"><div class="num">03</div><p>При необходимости строится модель, деталь печатается в PLA или PETG, до четырёх цветов, и проверяется по вашим размерам.</p></div><div class="step"><div class="num">04</div><p>Забираете в Сансет-Парке бесплатно или получаете доставку по зоне обслуживания за $15.</p></div></div>
+
+  <div class="shot"><span class="tag">Фото 02</span><span class="what">Кадр процесса: сломанный оригинал и напечатанная замена рядом в руке. Самая убедительная картинка на странице.</span></div>
+
+  <h2>Скан, модель, печать — один процесс</h2>
+  <div class="combo"><p>У некоторых предметов нет ни файла, ни каталожного номера: снятая с производства деталь, резной орнамент на фасаде, фурнитура, сделанная однажды и больше никогда. Такие вещи начинаются не с чертежа, а со скана.</p><p>Предмет снимается на месте фотограмметрией, превращается в обмерную 3D-модель, утраченные части достраиваются цифрой — и дальше печатается либо как готовая вещь, либо как мастер-модель для формы, если финальная деталь должна быть из гипса, искусственного камня или металла. Модель в любом случае остаётся у вас.</p><p>Снятые предметы собраны в <a class="link" href="../../scans.html">библиотеке сканов</a>, а обмерные и модельные работы описаны на <a class="link" href="../../services.html">странице CAD-to-BIM и scan-to-BIM</a>.</p></div>
+
+  <div class="shot"><span class="tag">Фото 03</span><span class="what">Последовательность «скан — печать», три кадра: элемент на месте, модель на экране, напечатанная деталь рядом с оригиналом.</span></div>
+
+  <h2>Оборудование</h2>
+  <p class="spec">Bambu Lab P1P с AMS. Поле печати 256 × 256 × 256 мм, до четырёх цветов в одной печати. Материалы — PLA и PETG: PLA для витринных вещей, табличек и фигурок, PETG там, где деталь держит нагрев, влагу или нагрузку.</p>
+  <p class="spec warn">ABS и ASA не предлагаю: принтер открытого типа, а этим материалам нужна закрытая прогретая камера, иначе деталь ведёт. Крупные предметы печатаются частями и собираются.</p>
+
+  <h2>Зона обслуживания</h2>
+  <ul class="areas"><li>Сансет-Парк</li><li>Бэй-Ридж</li><li>Дайкер-Хайтс</li><li>Парк-Слоуп</li><li>Боро-Парк</li><li>Гованус</li><li>Виндзор-Террас</li><li>Кенсингтон</li><li>Бенсонхёрст</li><li>Ред-Хук</li><li>Шипсхед-Бей</li><li>Брайтон-Бич</li></ul>
+
+  <div class="cols" style="margin-top:56px">
+    <div>
+      <h2 style="margin-top:0">Часы работы</h2>
+      <div class="row"><span class="k">Понедельник – пятница</span><span>18:00 – 00:00</span></div><div class="row"><span class="k">Суббота – воскресенье</span><span>По договорённости</span></div>
+      <p class="note">Сообщения, присланные днём, получают ответ в тот же вечер.</p>
+    </div>
+    <div>
+      <h2 style="margin-top:0">Контакты</h2>
+      <div class="row"><span class="k">Почта</span><a href="mailto:zakhargalanin@gmail.com">zakhargalanin@gmail.com</a></div><div class="row"><span class="k">Телефон</span><span>НОМЕР БУДЕТ ДОБАВЛЕН</span></div><div class="row"><span class="k">База</span><span>Сансет-Парк, Бруклин</span></div>
+      <p class="note">Приложите фото к первому сообщению — цену получите быстрее.</p>
+    </div>
+  </div>
+
+  <h2>Вопросы</h2>
+  <details><summary>У меня нет 3D-файла. Напечатаете?</summary><p>Да. Пришлите фотографии детали с линейкой или рулеткой в кадре либо привезите сам сломанный предмет. Построение модели по образцу или фото входит в услугу «деталь на замену» и уже учтено в цене.</p></details><details><summary>Какой максимальный размер и из чего печатаете?</summary><p>До 256 × 256 × 256 мм одной деталью, из PLA или PETG, до четырёх цветов в одной печати. Более крупные вещи печатаются частями и собираются. PETG — для всего, что держит нагрев, влагу или нагрузку.</p></details><details><summary>Сколько стоит и есть ли минимум?</summary><p>Табличка или номер дома — от $35, деталь на замену — от $45. Минимальный заказ $40. Цена фиксируется до начала печати и после работы не меняется.</p></details><details><summary>Сколько ждать?</summary><p>Большинство деталей — 2–4 дня, серия — 5–10 дней. Срочно, за 24–48 часов, можно за +50% и при наличии места в очереди.</p></details><details><summary>Доставляете или нужно забирать?</summary><p>Самовывоз в Сансет-Парке бесплатно. Доставка в любой район из списка зоны обслуживания — $15.</p></details>
+
+  <div class="cta">
+    <p><strong>Пришлите фото — получите цену</strong>Сфотографируйте деталь с линейкой рядом, напишите, что она должна делать, и в тот же вечер получите фиксированную цену.</p>
+    <a class="btn" href="mailto:zakhargalanin@gmail.com">Написать с фото</a>
+  </div>
+
+  <footer>
+    Galanin 3D <span class="sep">·</span> Sunset Park, Brooklyn, NY
+    <span class="sep">·</span> <a href="mailto:zakhargalanin@gmail.com">zakhargalanin@gmail.com</a>
+    <span class="sep">·</span> <a href="../../index.html?sorted=true">Портфолио</a>
+    <span class="sep">·</span> <a href="../../scans.html">Библиотека сканов</a>
+  </footer>
+</main>
+</body>
+</html>
