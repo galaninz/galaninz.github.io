@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sheet not found — Zakhar Galanin</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#001f3f">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  /* GitHub Pages serves this file for any missing path, at any depth —
+     so every link and asset here is absolute (/...). */
+  :root {
+    --bg: #001f3f;
+    --accent: #ff851b;
+    --accent-hover: #ffa64d;
+    --line: rgba(255,255,255,0.2);
+    --g: 80px;
+    --dot: 12px;
+  }
+  @media (max-width: 600px) { :root { --g: 60px; --dot: 8px; } }
+
+  * { box-sizing: border-box; }
+  html { background: var(--bg); }
+  body {
+    margin: 0; min-height: 100vh;
+    font-family: 'Orbitron', Arial, sans-serif; color: #fff;
+    background-color: transparent;
+    background-image:
+      linear-gradient(to right, var(--line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+    background-size: var(--g) var(--g);
+    box-shadow: inset -1px -1px 0 0 var(--line);
+  }
+  .header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    padding: 0 40px; height: var(--g);
+  }
+  .logo { font-size: 24px; font-weight: 700; color: #fff; text-decoration: none; line-height: 1; }
+  .logo:hover { color: #fff; }
+  .highlight-dot {
+    display: inline-block; width: 8px; height: 8px;
+    background: var(--accent); vertical-align: middle; margin: 0 2px;
+  }
+  .back { font-size: 28px; font-weight: 700; line-height: 1; color: var(--accent); text-decoration: none; }
+  .back:hover { color: var(--accent-hover); }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+
+  /* the one entry on this sheet: a dot on a grid intersection, two rows below the header */
+  .entry {
+    position: absolute;
+    left: var(--g); top: calc(var(--g) * 3);
+    max-width: calc(100vw - var(--g) - 40px);
+  }
+  .square {
+    position: absolute; left: calc(var(--dot) / -2 + .5px); top: calc(var(--dot) / -2 + .5px);
+    width: var(--dot); height: var(--dot); background: var(--accent);
+  }
+  .code {
+    position: absolute; left: 20px; bottom: calc(var(--g) * .3);
+    font-size: calc(var(--g) * 1.6); font-weight: 700; line-height: .8; color: #fff;
+  }
+  .title { position: absolute; left: 20px; top: -9px; font-size: 18px; line-height: 1.15; white-space: nowrap; }
+  .details {
+    position: absolute; left: 20px; top: 20px; width: min(520px, calc(100vw - var(--g) - 60px));
+    font-size: 13px; line-height: 1.5; color: rgba(255,255,255,.85);
+  }
+  .details a { color: var(--accent); }
+  .details a:hover { color: var(--accent-hover); }
+  .path { color: #fff; word-break: break-all; }
+  @media (max-width: 600px) {
+    .header { padding: 0 20px; }
+    .logo { font-size: 18px; }
+    .back { font-size: 22px; }
+    .title { font-size: 16px; }
+    .details { font-size: 14px; }
+  }
+</style>
+</head>
+<body>
+  <div class="header">
+    <a href="/" class="logo">ZAKHARGALAN<span class="highlight-dot"></span>IN</a>
+    <a href="/" class="back" aria-label="Back to the home page">↩</a>
+  </div>
+
+  <main class="entry">
+    <div class="code" aria-hidden="true">404</div>
+    <div class="square" aria-hidden="true"></div>
+    <h1 class="title" style="margin:0;font-weight:400">Sheet not in the set</h1>
+    <p class="details" style="margin:0">
+      Nothing is drawn at <span class="path" id="path"></span>. The page may have moved or the link has a typo.<br>
+      <a href="/">Back to zakhargalan.in</a> · <a href="/?sorted=true">Everything, sorted</a>
+    </p>
+  </main>
+
+<script>
+  document.getElementById('path').textContent = location.pathname || '/';
+</script>
+</body>
+</html>
