@@ -169,18 +169,25 @@ $(function () {
     { name: 'Earlier experience', year: '2014 - 2018', details: 'Concept-life, StroyMontazhKomplekt, Comfort Zone, TransAutomatics, Legion, ArtStroyProject, BaltHydroProject, Izhevsk Dept. of Architecture — engineer, site manager, estimator and architect-designer roles.' }
   ];
 
+  // span = how many grid rows an entry may use before its column's text is shrunk
   const myProjects = [
+    { label: 'Revisions', span: 2,
+      details: 'Drawing control for construction, for general contractors, subcontractors, architects and owners. Upload a set and every page becomes a sheet read from its title block; reissued sheets file as new versions and compare by overlay, side by side or blink. RFIs, punch items and submittals are pinned to the drawings, subs get one link that always shows the current set, and the field app works offline. An AI team of seven roles, from estimator to superintendent, reads the set and drafts RFIs. Syncs with monday.com, Outlook and cloud drives; Claude and ChatGPT connect over MCP. Free for one project. Founded and built solo.',
+      detailsHtml: '<a href="https://revisions.build" class="contact-link" target="_blank">Drawing control for construction</a>, for general contractors, subcontractors, architects and owners. Upload a set and every page becomes a sheet read from its title block; reissued sheets file as new versions and compare by overlay, side by side or blink. RFIs, punch items and submittals are pinned to the drawings, subs get one link that always shows the current set, and the field app works offline. An AI team of seven roles, from estimator to superintendent, reads the set and drafts RFIs. Syncs with monday.com, Outlook and cloud drives; Claude and ChatGPT connect over <a href="https://revisions.build/ai" class="contact-link" target="_blank">MCP</a>. Free for one project. Founded and built solo.' },
+    { label: 'SHIFT',
+      details: 'GPS time clock for New York construction crews, grown out of the GEKON attendance app. Location-verified clock-in, safety cards read from a photo, site-leave alerts, daily log and weekly payroll for Excel and QuickBooks. English, Spanish, Russian. App Store · Google Play · Privacy',
+      detailsHtml: '<a href="https://shiftbygekon.com" class="contact-link" target="_blank">GPS time clock for New York construction crews</a>, grown out of the GEKON attendance app. Location-verified clock-in, safety cards read from a photo, site-leave alerts, daily log and weekly payroll for Excel and QuickBooks. English, Spanish, Russian. <a href="https://apps.apple.com/us/app/shift-by-gekon/id6759354099" class="contact-link" target="_blank">App Store</a> · <a href="https://play.google.com/store/apps/details?id=in.zakhargalan.gekonattendancev2" class="contact-link" target="_blank">Google Play</a> · <a href="https://app.shiftbygekon.com/privacy.html" class="contact-link" target="_blank">Privacy</a>' },
+    { label: 'MIDIMINI',
+      details: 'Credit-card MIDI controller you reconfigure in the browser: five backlit buttons, two push encoders, six presets, USB-C and TRS MIDI. Setups save as shareable links. Created by Vladimir Ganichev, produced by Zakhar Galanin and hand-built in batches of thirty.',
+      detailsHtml: '<a href="https://midimini.shop" class="contact-link" target="_blank">Credit-card MIDI controller</a> you reconfigure in the browser: five backlit buttons, two push encoders, six presets, USB-C and TRS MIDI. Setups save as shareable links. Created by Vladimir Ganichev, produced by Zakhar Galanin and hand-built in batches of thirty.' },
     { label: 'CAD-to-BIM Services', details: 'CAD-to-BIM, Scan-to-BIM, existing conditions modeling, and BIM support for renovation, coordination, and preconstruction.', detailsHtml: '<a href="services.html" class="contact-link" target="_blank">CAD-to-BIM, Scan-to-BIM</a>, existing conditions modeling, and BIM support for renovation, coordination, and preconstruction.' },
     { label: '3D Printing — Brooklyn', details: 'On-demand 3D printing from Sunset Park: replacement parts from a sample or photo, signage and house numbers, short production runs for local businesses, and replicas of decorative elements. Quoted before printing, pickup or delivery across south Brooklyn.', detailsHtml: '<a href="3d-printing/" class="contact-link" target="_blank">On-demand 3D printing from Sunset Park</a>: replacement parts from a sample or photo, signage and house numbers, short production runs for local businesses, and replicas of decorative elements. Quoted before printing, pickup or delivery across south Brooklyn.' },
     { label: 'Scan Library', details: 'Field scans of existing architectural ornament — cornices, brackets, newel posts and finials — captured on site and rebuilt as measured 3D models for restoration and replication.', detailsHtml: '<a href="scans.html" class="contact-link" target="_blank">Field scans of existing architectural ornament</a> — cornices, brackets, newel posts and finials — captured on site and rebuilt as measured 3D models for restoration and replication.' },
-    { label: 'Revisions', details: 'Drawing and document control for construction — for developers, GCs, subcontractors and architects. Bulletins merge by title-block sheet number, with version history per sheet, personal markups, shared access, RFIs, submittals, change orders, layered takeoff, AI and Monday.com. Founded and built solo.', detailsHtml: '<a href="https://revisions.build" class="contact-link" target="_blank">Drawing and document control for construction</a> — for developers, GCs, subcontractors and architects. Bulletins merge by title-block sheet number, with version history per sheet, personal markups, shared access, RFIs, submittals, change orders, layered takeoff, AI and Monday.com. Founded and built solo.' },
-    { label: 'SKÅDIS Generator', details: 'Interactive 3D tool for designing custom IKEA SKÅDIS pegboard accessories. Built with Three.js — containers, hooks and hangers with real-time preview and STL export for 3D printing.', detailsHtml: '<a href="skadisgenerator.html" class="contact-link" target="_blank">Interactive 3D tool</a> for designing custom IKEA SKÅDIS pegboard accessories. Built with Three.js — containers, hooks and hangers with real-time preview and STL export for 3D printing.' },
-    { label: 'MIDI Controller', details: 'Compact MIDI controller built from scratch — electronics, firmware and a 3D-printed enclosure. Producer of the project, from prototype through to the finished instrument.', detailsHtml: '<a href="https://midimini.shop" class="contact-link" target="_blank">Compact MIDI controller</a> built from scratch — electronics, firmware and a 3D-printed enclosure. Producer of the project, from prototype through to the finished instrument.' },
-    { label: 'GEKON Attendance', details: 'React Native mobile app for construction crew time tracking. GPS geofencing, OSHA card verification, photo documentation on clock-out, bilingual (EN/ES), Google Sheets backend via Apps Script. App Store · Google Play · Privacy Policy', detailsHtml: 'React Native mobile app for construction crew time tracking. GPS geofencing, OSHA card verification, photo documentation on clock-out, bilingual (EN/ES), Google Sheets backend via Apps Script. <a href="https://apps.apple.com/us/app/gekon-app/id6759354099" class="contact-link" target="_blank">App Store</a> · <a href="https://play.google.com/store/apps/details?id=in.zakhargalan.gekonattendancev2&amp;hl=en_US" class="contact-link" target="_blank">Google Play</a> · <a href="privacy-gekon-attendance.html" class="contact-link" target="_blank">Privacy Policy</a>' }
+    { label: 'SKÅDIS Generator', details: 'Interactive 3D tool for designing custom IKEA SKÅDIS pegboard accessories. Built with Three.js — containers, hooks and hangers with real-time preview and STL export for 3D printing.', detailsHtml: '<a href="skadisgenerator.html" class="contact-link" target="_blank">Interactive 3D tool</a> for designing custom IKEA SKÅDIS pegboard accessories. Built with Three.js — containers, hooks and hangers with real-time preview and STL export for 3D printing.' }
   ];
 
   const skills = [
-    { label: 'Education', details: 'BSc, Peter the Great St. Petersburg Polytechnic University — Construction of Unique Buildings and Structures. Evaluated in the US as Civil Engineering.' },
+    { label: 'Education', details: 'BSc, St. Petersburg Polytechnic University — Construction of Unique Buildings and Structures; US equivalent: Civil Engineering.' },
     { label: 'CAD', details: 'AutoCAD, SketchUp' },
     { label: 'BIM', details: 'Revit, Tekla, Sapphire' },
     { label: 'Structural Analysis', details: 'ETABS, SCAD, Lira, Robot', detailsHtml: '<span class="certificate-link" data-img="Structuristik1.jpg">ETABS</span>, SCAD, Lira, Robot' },
@@ -194,6 +201,7 @@ $(function () {
     { label: 'Phone', details: '+1 929 784-9752', detailsHtml: '<a href="tel:+19297849752" class="contact-link">+1 929 784-9752</a>' },
     { label: 'Email', details: 'zakhargalanin@gmail.com', detailsHtml: '<a href="mailto:zakhargalanin@gmail.com" class="contact-link">zakhargalanin@gmail.com</a>' },
     { label: 'Location', details: 'New York' },
+    { label: 'LinkedIn', details: 'Zakhar Galanin', detailsHtml: '<a href="https://www.linkedin.com/in/zakhar-galanin-514ba7373/" class="contact-link" target="_blank">Zakhar Galanin</a>' },
     { label: 'GitHub', details: 'www.github.com/galaninz', detailsHtml: '<a href="https://www.github.com/galaninz" class="contact-link" target="_blank">www.github.com/galaninz</a>' }
   ];
 
@@ -289,21 +297,25 @@ $(function () {
     return h;
   }
 
-  // one shared description size, as large as possible, so every entry fits ONE grid cell
-  function shrinkToOneCell(lists, g) {
-    const base = cssNum('--detail-size') || 12, min = 8;
-    const items = lists.flat();
+  // one description size per column, as large as possible while every entry
+  // stays inside its allowance (1 grid row, or `span` rows for long entries).
+  // In a single phone column the text keeps its full size and rows grow instead.
+  function fitColumn(list, g, single) {
+    const base = cssNum('--detail-size') || 12;
+    const min = single ? base : 10;
+    const set = s => list.forEach(sq => sq.find('.item-details').css('font-size', s + 'px'));
     for (let size = base; size >= min; size--) {
-      $('.item-details').css('font-size', size + 'px');
-      if (items.every(sq => measure(sq) <= g - 6)) return size;
+      set(size);
+      if (list.every(sq => measure(sq) <= (sq.data('span') || 1) * g - 6)) return size;
     }
+    set(min);
     return min;
   }
 
   /* ---------- build ---------- */
   function createItem(item, type) {
     const label = item.name ? `${item.name} (${item.year})` : item.label;
-    const sq = $('<div class="item-link"></div>');
+    const sq = $('<div class="item-link"></div>').data('span', item.span || 1);
     $('<div class="square"></div>').appendTo(sq);
     $('<div class="item-text"></div>').text(label).appendTo(sq);
     $('<div class="item-details"></div>')
@@ -343,24 +355,25 @@ $(function () {
     const g = G(), w = $(window).width();
     const units = Math.max(Math.floor(w / g), 3);
     const cols  = w >= 1200 ? 4 : w >= 800 ? 2 : 1;
-    const avail = Math.max(units - 2, 2);
+    const avail = Math.max(units - 1, 2);
 
     let u;
     if (cols === 4) {
-      const a = Math.max(Math.round(avail * .34), 2);
-      const b = Math.max(Math.round(avail * .30), 2);
-      const c = Math.max(Math.round(avail * .18), 2);
+      const a = Math.max(Math.round(avail * .27), 3);
+      const b = Math.max(Math.round(avail * .38), 3);
+      const c = Math.max(Math.round(avail * .18), 3);
       u = [a, b, c, Math.max(avail - a - b - c, 2)];
     } else if (cols === 2) {
       const second = Math.min(6, Math.max(Math.round(avail * .38), 3));
       u = [Math.max(avail - second, 3), second];
     } else {
-      u = [avail];
+      u = [Math.max(units - 1, 2)];
     }
 
     const xs = []; let acc = g;
     u.forEach(n => { xs.push(acc); acc += n * g; });
-    const colW = u.map(n => n * g - g / 2);
+    // text starts 20px right of the dot; keep a 16px gutter on the right edge
+    const colW = u.map((n, i) => Math.min(n * g - g / 2, w - xs[i] - 20 - 16));
 
     const lists = cols === 4
       ? [groups.project, groups.myproject, groups.skill, groups.contact]
@@ -381,14 +394,14 @@ $(function () {
       });
     }));
 
-    // pass 2 — fit the descriptions into a single cell
-    shrinkToOneCell(lists, g);
+    // pass 2 — fit each column's descriptions into their rows
+    lists.forEach(list => fitColumn(list, g, cols === 1));
 
     // pass 3 — place
     lists.forEach((list, ci) => {
       let y = top;
       list.forEach(sq => {
-        const cell = Math.max(Math.ceil(measure(sq) / g) * g, g);
+        const cell = Math.max(Math.ceil((measure(sq) + 6) / g) * g, g);   // 6px clear of the next dot
         step(sq, xs[ci], y, run, () => {
           const d = sq.find('.item-details');
           if (!d.hasClass('show-details')) { d.addClass('show-details'); type(d, d.data('plain'), d.data('html'), run); }
